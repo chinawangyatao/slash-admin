@@ -8,8 +8,8 @@ interface ReturnButtonProps {
 export function ReturnButton({ onClick }: ReturnButtonProps) {
   const { t } = useTranslation();
   return (
-    <Button block type="link" onClick={onClick}>
-      <div className="flex items-center justify-center hover:underline">
+    <Button block type="text" onClick={onClick}>
+      <div className="flex items-center justify-center ">
         <MdArrowBackIosNew />
         <span className="text-sm">{t('sys.login.backSignIn')}</span>
       </div>

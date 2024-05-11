@@ -1,7 +1,7 @@
-import { Alert, Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+import { Alert, Button, Checkbox, Col, Divider, Form, Input, message, Row } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
+import { AiFillWechat, AiOutlineAlipay, AiOutlineQq } from 'react-icons/ai';
 
 import { DEFAULT_USER, TEST_USER } from '@/_mock/assets';
 import { SignInReq } from '@/api/services/userService';
@@ -15,6 +15,7 @@ function LoginForm() {
   const { t } = useTranslation();
   const themeToken = useThemeToken();
   const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const { loginState, setLoginState } = useLoginStateContext();
   const signIn = useSignIn();
@@ -31,6 +32,7 @@ function LoginForm() {
   };
   return (
     <>
+      {contextHolder}
       <div className="mb-4 text-2xl font-bold xl:text-3xl">{t('sys.login.signInFormTitle')}</div>
       <Form
         name="login"
@@ -128,9 +130,9 @@ function LoginForm() {
         <Divider className="!text-xs">{t('sys.login.otherSignIn')}</Divider>
 
         <div className="flex cursor-pointer justify-around text-2xl">
-          <AiFillGithub />
-          <AiFillWechat />
-          <AiFillGoogleCircle />
+          <AiFillWechat onClick={() => messageApi.warning(t('common.notDeveloped'))} />
+          <AiOutlineAlipay onClick={() => messageApi.warning(t('common.notDeveloped'))} />
+          <AiOutlineQq onClick={() => messageApi.warning(t('common.notDeveloped'))} />
         </div>
       </Form>
     </>
