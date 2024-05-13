@@ -26,7 +26,6 @@ export default function ChartPage() {
       >
         https://apexcharts.com
       </Typography.Link>
-
       <Row gutter={[16, 16]} justify="center">
         <Col span={23} lg={12}>
           <Card title="Area">

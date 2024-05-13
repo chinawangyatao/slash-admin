@@ -81,7 +81,6 @@ function Analysis() {
           />
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-8" justify="center">
         <Col span={23} lg={12} xl={16}>
           <Card title="Website Visits">
@@ -94,7 +93,6 @@ function Analysis() {
           </Card>
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-8" justify="center">
         <Col span={23} lg={12} xl={16}>
           <Card title="Conversion Rates">
@@ -107,7 +105,6 @@ function Analysis() {
           </Card>
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-8">
         <Col span={24} lg={12} xl={16}>
           <Card title="News">
@@ -120,7 +117,6 @@ function Analysis() {
           </Card>
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="my-8">
         <Col span={24} lg={12} xl={8}>
           <Card title="Traffic by Site">

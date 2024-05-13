@@ -11,6 +11,7 @@ import { flattenTrees } from '@/utils/tree';
 import { Permission } from '#/entity';
 import { BasicStatus, PermissionType } from '#/enum';
 import { AppRouteObject } from '#/router';
+// @ts-ignore
 
 // 使用 import.meta.glob 获取所有路由组件
 const entryPath = '/src/pages';
@@ -38,6 +39,7 @@ export function usePermissionRoutes() {
   // }, []);
 
   const permissions = useUserPermission();
+  console.log(permissions);
 
   return useMemo(() => {
     const flattenedPermissions = flattenTrees(permissions!);
@@ -45,6 +47,8 @@ export function usePermissionRoutes() {
       permissions || [],
       flattenedPermissions,
     );
+    console.log(flattenedPermissions);
+    console.log(permissionRoutes);
     return [...permissionRoutes];
   }, [permissions]);
 }

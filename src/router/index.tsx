@@ -20,7 +20,7 @@ const PAGE_NOT_FOUND_ROUTE: AppRouteObject = {
 
 export default function Router() {
   const permissionRoutes = usePermissionRoutes();
-  console.log(permissionRoutes);
+  // console.log(permissionRoutes);
   const asyncRoutes: AppRouteObject = {
     // 路由入口
     path: '/',
