@@ -8,9 +8,10 @@ import { useUserPermission } from '@/store/userStore';
 import ProTag from '@/theme/antd/components/tag';
 import { flattenTrees } from '@/utils/tree';
 
-import { Permission } from '#/entity';
-import { BasicStatus, PermissionType } from '#/enum';
+import { PermissionsList } from '#/entity';
+import { PermissionType } from '#/enum';
 import { AppRouteObject } from '#/router';
+import { getRoutesFromModules } from '@/router/utils.ts';
 // @ts-ignore
 
 // 使用 import.meta.glob 获取所有路由组件
@@ -39,60 +40,57 @@ export function usePermissionRoutes() {
   // }, []);
 
   const permissions = useUserPermission();
-  console.log(permissions);
-
   return useMemo(() => {
     const flattenedPermissions = flattenTrees(permissions!);
-    const permissionRoutes = transformPermissionToMenuRoutes(
-      permissions || [],
-      flattenedPermissions,
-    );
-    console.log(flattenedPermissions);
-    console.log(permissionRoutes);
+    const permissionRoutes = transformPermissionToMenuRoutes(permissions || []);
+    console.log('flattenedPermissions', flattenedPermissions);
+    // console.log(permissionRoutes);
     return [...permissionRoutes];
   }, [permissions]);
 }
 
 /**
- * transform Permission[] to  AppRouteObject[]
+ * 将权限 [] 转换为AppRouteObject[]
  * @param permissions
- * @param parent
  */
-function transformPermissionToMenuRoutes(
-  permissions: Permission[],
-  flattenedPermissions: Permission[],
-) {
+// @ts-ignore
+function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
   return permissions.map((permission) => {
     const {
-      route,
-      type,
-      label,
       icon,
-      order,
-      hide,
-      hideTab,
-      status,
-      frameSrc,
-      newFeature,
+      menuName,
+      menuType,
       component,
+      isFrame,
+      path,
+      name,
+      sort,
+      visible,
+      disabled,
+      hideTab,
+      newFeature,
       parentId,
       children = [],
     } = permission;
 
     const appRoute: AppRouteObject = {
-      path: route,
+      path: path,
       meta: {
-        label,
-        key: getCompleteRoute(permission, flattenedPermissions),
-        hideMenu: !!hide,
-        hideTab,
-        disabled: status === BasicStatus.DISABLE,
+        label: name,
+        key: component === '' ? path : component,
+        hideMenu: visible,
+        hideTab: hideTab,
+        disabled: disabled,
+        menuName,
       },
     };
 
-    if (order) appRoute.order = order;
+    if (sort) appRoute.order = sort;
     if (icon) appRoute.meta!.icon = icon;
-    if (frameSrc) appRoute.meta!.frameSrc = frameSrc;
+    if (isFrame) {
+      // @ts-ignore
+      appRoute.meta!.frameSrc = isFrame;
+    }
 
     if (newFeature) {
       appRoute.meta!.suffix = (
@@ -102,7 +100,7 @@ function transformPermissionToMenuRoutes(
       );
     }
 
-    if (type === PermissionType.CATALOGUE) {
+    if (menuType === PermissionType.CATALOGUE) {
       appRoute.meta!.hideTab = true;
       if (!parentId) {
         appRoute.element = (
@@ -111,18 +109,18 @@ function transformPermissionToMenuRoutes(
           </Suspense>
         );
       }
-      appRoute.children = transformPermissionToMenuRoutes(children, flattenedPermissions);
-
+      appRoute.children = transformPermissionToMenuRoutes(children);
+      //
       if (!isEmpty(children)) {
         appRoute.children.unshift({
           index: true,
-          element: <Navigate to={children[0].route} replace />,
+          element: <Navigate to={children[0].path} replace />,
         });
       }
-    } else if (type === PermissionType.MENU) {
+    } else if (menuType === PermissionType.MENU) {
       const Element = lazy(resolveComponent(component!) as any);
-      if (frameSrc) {
-        appRoute.element = <Element src={frameSrc} />;
+      if (isFrame) {
+        appRoute.element = <Element src={isFrame} />;
       } else {
         appRoute.element = (
           <Suspense fallback={<CircleLoading />}>
@@ -137,19 +135,19 @@ function transformPermissionToMenuRoutes(
 }
 
 /**
- * Splicing from the root permission route to the current permission route
+ * 从根权限路由拼接到当前权限路由
  * @param {Permission} permission - current permission
  * @param {Permission[]} flattenedPermissions - flattened permission array
  * @param {string} route - parent permission route
  * @returns {string} - The complete route after splicing
  */
-function getCompleteRoute(permission: Permission, flattenedPermissions: Permission[], route = '') {
-  const currentRoute = route ? `/${permission.route}${route}` : `/${permission.route}`;
-
-  if (permission.parentId) {
-    const parentPermission = flattenedPermissions.find((p) => p.id === permission.parentId)!;
-    return getCompleteRoute(parentPermission, flattenedPermissions, currentRoute);
-  }
-
-  return currentRoute;
-}
+// function getCompleteRoute(permission: Permission, flattenedPermissions: Permission[], route = '') {
+//   const currentRoute = route ? `/${permission.route}${route}` : `/${permission.route}`;
+//
+//   if (permission.parentId) {
+//     const parentPermission = flattenedPermissions.find((p) => p.id === permission.parentId)!;
+//     return getCompleteRoute(parentPermission, flattenedPermissions, currentRoute);
+//   }
+//
+//   return currentRoute;
+// }

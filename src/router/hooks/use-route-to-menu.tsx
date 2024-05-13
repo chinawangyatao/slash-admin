@@ -1,6 +1,5 @@
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { Iconify, SvgIcon } from '@/components/icon';
 import { useSettings } from '@/store/settingStore';
@@ -12,7 +11,6 @@ import { AppRouteObject } from '#/router';
  *   routes -> menus
  */
 export function useRouteToMenuFn() {
-  const { t } = useTranslation();
   const { themeLayout } = useSettings();
   const routeToMenuFn = useCallback(
     (items: AppRouteObject[]) => {
@@ -31,7 +29,7 @@ export function useRouteToMenuFn() {
                   themeLayout === ThemeLayout.Horizontal ? 'justify-start' : 'justify-between'
                 } `}
               >
-                <div className="">{t(label)}</div>
+                <div className="">{label}</div>
                 {suffix}
               </div>
             );
@@ -53,7 +51,7 @@ export function useRouteToMenuFn() {
           return menuItem as ItemType;
         });
     },
-    [t, themeLayout],
+    [themeLayout],
   );
   return routeToMenuFn;
 }

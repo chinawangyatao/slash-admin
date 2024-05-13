@@ -1,15 +1,16 @@
-import { Alert, Button, Checkbox, Col, Divider, Form, Input, message, Row } from 'antd';
+import { Alert, Button, Checkbox, Col, Divider, Form, Input, message, Row, Space } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AiFillWechat, AiOutlineAlipay, AiOutlineQq } from 'react-icons/ai';
 
 import { DEFAULT_USER, TEST_USER } from '@/_mock/assets';
-import { SignInReq } from '@/api/services/userService';
+import userService, { SignInReq } from '@/api/services/userService';
 import { useSignIn } from '@/store/userStore';
 import ProTag from '@/theme/antd/components/tag';
 import { useThemeToken } from '@/theme/hooks';
 
 import { LoginStateEnum, useLoginStateContext } from './providers/LoginStateProvider';
+import { useQuery } from '@tanstack/react-query';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -20,16 +21,20 @@ function LoginForm() {
   const { loginState, setLoginState } = useLoginStateContext();
   const signIn = useSignIn();
 
+  // @ts-ignore
+  const { data, refetch }: any = useQuery(['captcha'], userService.findCaptcha);
+
   if (loginState !== LoginStateEnum.LOGIN) return null;
 
-  const handleFinish = async ({ username, password }: SignInReq) => {
+  const handleFinish = async ({ username, password, code }: SignInReq) => {
     setLoading(true);
     try {
-      await signIn({ username, password });
+      await signIn({ username, password, code, uuid: data.id, type: 'account' });
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <>
       {contextHolder}
@@ -86,6 +91,17 @@ function LoginForm() {
           rules={[{ required: true, message: t('sys.login.passwordPlaceholder') }]}
         >
           <Input.Password type="password" placeholder={t('sys.login.password')} />
+        </Form.Item>
+        <Form.Item name="code" rules={[{ required: true, message: t('sys.login.captcha') }]}>
+          <Space>
+            <Input placeholder={t('sys.login.captcha')} />
+            <img
+              className={'cursor-pointer'}
+              alt={'captcha'}
+              src={data?.data}
+              onClick={() => refetch()}
+            />
+          </Space>
         </Form.Item>
         <Form.Item>
           <Row>

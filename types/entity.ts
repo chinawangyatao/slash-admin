@@ -3,6 +3,31 @@ import { BasicStatus, PermissionType } from './enum';
 export interface UserToken {
   accessToken?: string;
   refreshToken?: string;
+  currentAuthority?: string;
+}
+
+export interface PermissionsList {
+  menuId?: number;
+  title?: string;
+  permission?: string;
+  parentId?: number;
+  noCache?: boolean;
+  Breadcrumb?: string;
+  sort?: number;
+  visible: boolean;
+  isFrame?: string | boolean; // 类型待确定，暂时保留为字符串
+  Redirect?: string;
+  menuName: string;
+  name: string;
+  icon: string;
+  path: string;
+  menuType: 'C' | 'M' | 'F'; // 可能的值为 'C', 'M', 'F'
+  component: string;
+  hideInMenu: boolean;
+  disabled: boolean;
+  hideTab: boolean;
+  newFeature: boolean;
+  children: PermissionsList[];
 }
 
 export interface UserInfo {
@@ -51,4 +76,17 @@ export interface Role {
   order?: number;
   desc?: string;
   permission?: Permission[];
+}
+
+export interface Captcha {
+  errorCode: 'string';
+  errorMessage: 'string';
+  host: 'string';
+  showType: 0;
+  status: 'string';
+  success: true;
+  traceId: 'string';
+  data: 'string';
+  id: 'string';
+  msg: 'string';
 }

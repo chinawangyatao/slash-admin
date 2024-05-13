@@ -67,6 +67,7 @@
       "email": "邮箱",
       "smsCode": "短信验证码",
       "mobile": "手机号码",
+      "captcha": "验证码",
 
       "registerAndAgree": "注册即我同意",
       "termsOfService": " 服务条款 ",

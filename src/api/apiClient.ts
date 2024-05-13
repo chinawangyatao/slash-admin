@@ -5,7 +5,8 @@ import { isEmpty } from 'ramda';
 import { t } from '@/locales/i18n';
 
 import { Result } from '#/api';
-import { ResultEnum } from '#/enum';
+import { ResultEnum, StorageEnum } from '#/enum';
+import { getItem } from '@/utils/storage.ts';
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
@@ -18,7 +19,15 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // 在请求被发送之前做些什么
-    config.headers.Authorization = 'Bearer Token';
+
+    const token = getItem(<StorageEnum>'token') ?? null;
+
+    //  没有 token 返回
+    // 如果没有 token 原生 config 返回
+    if (!token) return config;
+    // 如果有 token 会加上，访问权限路由会 404
+    // @ts-ignore
+    config.headers.Authorization = `Bearer ${token.accessToken}`;
     return config;
   },
   (error) => {
@@ -29,24 +38,24 @@ axiosInstance.interceptors.request.use(
 
 // 响应拦截
 axiosInstance.interceptors.response.use(
-  (res: AxiosResponse<Result>) => {
+  (res: AxiosResponse) => {
     if (!res.data) throw new Error(t('sys.api.apiRequestFailed'));
 
-    const { status, data, message } = res.data;
+    const { status, data, statusText } = res;
     // 业务请求成功
-    const hasSuccess = data && Reflect.has(res.data, 'status') && status === ResultEnum.SUCCESS;
+    const hasSuccess = data && Reflect.has(res, 'status') && status === ResultEnum.SUCCESS;
     if (hasSuccess) {
       return data;
     }
 
     // 业务请求错误
-    throw new Error(message || t('sys.api.apiRequestFailed'));
+    throw new Error(statusText || t('sys.api.apiRequestFailed'));
   },
   (error: AxiosError<Result>) => {
     const { response, message } = error || {};
     let errMsg = '';
     try {
-      errMsg = response?.data?.message || message;
+      errMsg = response?.data?.statusText || message;
     } catch (error) {
       throw new Error(error as unknown as string);
     }

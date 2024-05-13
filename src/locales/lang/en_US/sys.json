@@ -68,6 +68,7 @@
       "email": "Email",
       "smsCode": "SMS code",
       "mobile": "Mobile",
+      "captcha": "captcha",
 
       "registerAndAgree": "By signing up, I agree to",
       "termsOfService": " Terms of service ",

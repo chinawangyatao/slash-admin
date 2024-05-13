@@ -30,6 +30,7 @@ export default function NavHorizontal() {
 
   useEffect(() => {
     setSelectedKeys([pathname]);
+    console.log('0000000000000=====================');
   }, [pathname, matches]);
 
   useEffect(() => {

@@ -48,6 +48,7 @@ export interface RouteMeta {
    * @example /user/:id
    */
   params?: Params<string>;
+  menuName?: string;
 }
 export type AppRouteObject = {
   order?: number;
