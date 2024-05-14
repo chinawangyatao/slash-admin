@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Params, RouteObject } from 'react-router-dom';
 
 export interface RouteMeta {
+  path(path: any): unknown;
   /**
    * antd menu selectedKeys
    */

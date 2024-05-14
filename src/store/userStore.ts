@@ -41,7 +41,7 @@ type UserStore = {
 const useUserStore = create<UserStore>((set) => ({
   userInfo: getItem<UserInfo>(StorageEnum.User) || {},
   userToken: getItem<UserToken>(StorageEnum.Token) || {},
-  permissionsList: [],
+  permissionsList: getItem(StorageEnum.Permissions) || [],
   actions: {
     setUserInfo: (userInfo: any) => {
       set({ userInfo });
@@ -55,9 +55,11 @@ const useUserStore = create<UserStore>((set) => ({
       set({ userInfo: {}, userToken: {} });
       removeItem(StorageEnum.User);
       removeItem(StorageEnum.Token);
+      removeItem(StorageEnum.Permissions);
     },
     setPermissionsList: (permissionsList: PermissionsList[]) => {
       set({ permissionsList });
+      setItem(StorageEnum.Permissions, permissionsList);
     },
   },
 }));

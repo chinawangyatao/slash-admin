@@ -16,6 +16,12 @@ export default defineConfig({
     // 开css sourcemap方便找css
     devSourcemap: true,
   },
+  // 路径别名
+  resolve: {
+    alias: {
+      '@': path.join(__dirname, 'src'),
+    },
+  },
   plugins: [
     react(),
     // 同步tsconfig.json的path设置alias

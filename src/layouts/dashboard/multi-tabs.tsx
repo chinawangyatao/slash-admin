@@ -2,7 +2,6 @@ import { Dropdown, MenuProps, Tabs, TabsProps } from 'antd';
 import Color from 'color';
 import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react-beautiful-dnd';
-import { useTranslation } from 'react-i18next';
 import { useToggle, useFullscreen } from 'react-use';
 import styled from 'styled-components';
 
@@ -29,7 +28,7 @@ type Props = {
   offsetTop?: boolean;
 };
 export default function MultiTabs({ offsetTop = false }: Props) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { push } = useRouter();
   const scrollContainer = useRef<HTMLDivElement>(null);
   const [hoveringTabKey, setHoveringTabKey] = useState('');
@@ -62,7 +61,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     () => ({
       'sys.menu.system.user_detail': (tab: KeepAliveTab) => {
         const userId = tab.params?.id;
-        const defaultLabel = t(tab.label);
+        const defaultLabel = tab.label;
         if (userId) {
           const user = USER_LIST.find((item) => item.id === userId);
           return `${user?.username}-${defaultLabel}`;
@@ -70,7 +69,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
         return defaultLabel;
       },
     }),
-    [t],
+    [],
   );
 
   /**
@@ -79,17 +78,17 @@ export default function MultiTabs({ offsetTop = false }: Props) {
   const menuItems = useMemo<MenuProps['items']>(
     () => [
       {
-        label: t(`sys.tab.${MultiTabOperation.FULLSCREEN}`),
+        label: `sys.tab.${MultiTabOperation.FULLSCREEN}`,
         key: MultiTabOperation.FULLSCREEN,
         icon: <Iconify icon="material-symbols:fullscreen" size={18} />,
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.REFRESH}`),
+        label: `sys.tab.${MultiTabOperation.REFRESH}`,
         key: MultiTabOperation.REFRESH,
         icon: <Iconify icon="mdi:reload" size={18} />,
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.CLOSE}`),
+        label: `sys.tab.${MultiTabOperation.CLOSE}`,
         key: MultiTabOperation.CLOSE,
         icon: <Iconify icon="material-symbols:close" size={18} />,
         disabled: tabs.length === 1,
@@ -98,7 +97,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
         type: 'divider',
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.CLOSELEFT}`),
+        label: `sys.tab.${MultiTabOperation.CLOSELEFT}`,
         key: MultiTabOperation.CLOSELEFT,
         icon: (
           <Iconify
@@ -110,7 +109,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
         disabled: tabs.findIndex((tab) => tab.key === openDropdownTabKey) === 0,
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.CLOSERIGHT}`),
+        label: `sys.tab.${MultiTabOperation.CLOSERIGHT}`,
         key: MultiTabOperation.CLOSERIGHT,
         icon: <Iconify icon="material-symbols:tab-close-right-outline" size={18} />,
         disabled: tabs.findIndex((tab) => tab.key === openDropdownTabKey) === tabs.length - 1,
@@ -119,18 +118,18 @@ export default function MultiTabs({ offsetTop = false }: Props) {
         type: 'divider',
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.CLOSEOTHERS}`),
+        label: `sys.tab.${MultiTabOperation.CLOSEOTHERS}`,
         key: MultiTabOperation.CLOSEOTHERS,
         icon: <Iconify icon="material-symbols:tab-close-outline" size={18} />,
         disabled: tabs.length === 1,
       },
       {
-        label: t(`sys.tab.${MultiTabOperation.CLOSEALL}`),
+        label: `sys.tab.${MultiTabOperation.CLOSEALL}`,
         key: MultiTabOperation.CLOSEALL,
         icon: <Iconify icon="mdi:collapse-all-outline" size={18} />,
       },
     ],
-    [openDropdownTabKey, t, tabs],
+    [openDropdownTabKey, tabs],
   );
 
   /**
@@ -227,7 +226,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
             onMouseLeave={() => setHoveringTabKey('')}
           >
             <div>
-              {SpecialTabRenderMap[tab.label] ? SpecialTabRenderMap[tab.label](tab) : t(tab.label)}
+              {/* {SpecialTabRenderMap[tab.label] ? SpecialTabRenderMap[tab.label](tab) : tab.label} */}
             </div>
             <Iconify
               icon="ion:close-outline"
@@ -250,7 +249,6 @@ export default function MultiTabs({ offsetTop = false }: Props) {
       );
     },
     [
-      t,
       menuItems,
       activeTabRoutePath,
       hoveringTabKey,
@@ -258,7 +256,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
       menuClick,
       closeTab,
       calcTabStyle,
-      SpecialTabRenderMap,
+      // SpecialTabRenderMap,
     ],
   );
 

@@ -34,20 +34,20 @@ export default function BreadCrumb() {
         ?.children?.filter((item) => !item.meta?.hideMenu);
       const result: ItemType = {
         key,
-        title: t(label),
+        title: label,
       };
       if (items) {
         result.menu = {
           items: items.map((item) => ({
             key: item.meta?.key,
-            label: <Link to={item.meta!.key!}>{t(item.meta!.label)}</Link>,
+            label: <Link to={item.meta!.key!}>{item.meta!.label}</Link>,
           })),
         };
       }
       return result;
     });
     setBreadCrumbs(breadCrumbs);
-  }, [matches, flattenedRoutes, t, permissionRoutes]);
+  }, [matches, flattenedRoutes, permissionRoutes]);
 
   return <Breadcrumb items={breadCrumbs} className="!text-sm" />;
 }
