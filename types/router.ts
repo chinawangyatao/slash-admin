@@ -54,4 +54,5 @@ export type AppRouteObject = {
   order?: number;
   meta?: RouteMeta;
   children?: AppRouteObject[];
+  component?: string;
 } & Omit<RouteObject, 'children'>;

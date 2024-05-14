@@ -3,7 +3,6 @@ import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import Color from 'color';
 import { CSSProperties, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useBoolean, useEvent, useKeyPressEvent } from 'react-use';
 import styled from 'styled-components';
 
@@ -14,7 +13,6 @@ import ProTag from '@/theme/antd/components/tag';
 import { useThemeToken } from '@/theme/hooks';
 
 export default function SearchBar() {
-  const { t } = useTranslation();
   const { replace } = useRouter();
   const inputRef = useRef<InputRef>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -36,12 +34,12 @@ export default function SearchBar() {
   useEffect(() => {
     const result = flattenedRoutes.filter(
       (item) =>
-        t(item.label).toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1 ||
+        item.label.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1 ||
         item.key.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1,
     );
     setSearchResult(result);
     setSelectedItemIndex(0);
-  }, [searchQuery, t, flattenedRoutes]);
+  }, [searchQuery, flattenedRoutes]);
 
   const handleMetaK = (event: KeyboardEvent) => {
     if (event.metaKey && event.key === 'k') {
@@ -183,7 +181,7 @@ export default function SearchBar() {
           <Scrollbar>
             <div ref={listRef} className="py-2">
               {searchResult.map(({ key, label }, index) => {
-                const partsTitle = parse(t(label), match(t(label), searchQuery));
+                const partsTitle = parse(label, match(label, searchQuery));
                 const partsKey = parse(key, match(key, searchQuery));
                 return (
                   <StyledListItemButton

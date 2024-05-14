@@ -14,7 +14,7 @@ import { create } from 'zustand';
 import userService, { SignInReq } from '@/api/services/userService';
 import { getItem, removeItem, setItem } from '@/utils/storage';
 
-import { PermissionsList, UserInfo, UserToken } from '#/entity';
+import { PermissionsList, UserInfo, UserPermission, UserToken } from '#/entity';
 import { StorageEnum } from '#/enum';
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
@@ -38,10 +38,12 @@ type UserStore = {
   };
 };
 
+// @ts-ignore
 const useUserStore = create<UserStore>((set) => ({
   userInfo: getItem<UserInfo>(StorageEnum.User) || {},
   userToken: getItem<UserToken>(StorageEnum.Token) || {},
-  permissionsList: [],
+  //  @ts-ignore   permissionsList 可能是空字符，下面做了非空处理
+  permissionsList: getItem<UserPermission>(StorageEnum.Permissions) || [],
   actions: {
     setUserInfo: (userInfo: any) => {
       set({ userInfo });
@@ -55,9 +57,11 @@ const useUserStore = create<UserStore>((set) => ({
       set({ userInfo: {}, userToken: {} });
       removeItem(StorageEnum.User);
       removeItem(StorageEnum.Token);
+      removeItem(StorageEnum.Permissions);
     },
     setPermissionsList: (permissionsList: PermissionsList[]) => {
       set({ permissionsList });
+      setItem(StorageEnum.Permissions, permissionsList);
     },
   },
 }));
@@ -91,6 +95,7 @@ export const useSignIn = () => {
       if (!menuList.success) throw Error('find Menu error!!');
 
       setPermissionsList(menuList.data);
+
       navigatge(HOMEPAGE, { replace: true });
 
       notification.success({

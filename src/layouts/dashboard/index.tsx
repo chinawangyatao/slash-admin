@@ -40,7 +40,6 @@ function DashboardLayout() {
 
   const navVertical = (
     <div className="z-50 hidden h-full flex-shrink-0 md:block">
-      【【【【【【】】】】】】
       <Nav />
     </div>
   );

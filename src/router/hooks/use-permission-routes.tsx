@@ -6,13 +6,12 @@ import { Iconify } from '@/components/icon';
 import { CircleLoading } from '@/components/loading';
 import { useUserPermission } from '@/store/userStore';
 import ProTag from '@/theme/antd/components/tag';
-import { flattenTrees } from '@/utils/tree';
 
 import { PermissionsList } from '#/entity';
 import { PermissionType } from '#/enum';
 import { AppRouteObject } from '#/router';
-import { getRoutesFromModules } from '@/router/utils.ts';
 // @ts-ignore
+import { getRoutesFromModules } from '@/router/utils.ts';
 
 // 使用 import.meta.glob 获取所有路由组件
 const entryPath = '/src/pages';
@@ -27,7 +26,7 @@ export const pagesSelect = Object.entries(pages).map(([path]) => {
 
 // 构建绝对路径的函数
 function resolveComponent(path: string) {
-  return pages[`${entryPath}${path}`];
+  return pages[`${entryPath}${path}.tsx`];
 }
 
 /**
@@ -40,11 +39,11 @@ export function usePermissionRoutes() {
   // }, []);
 
   const permissions = useUserPermission();
+
   return useMemo(() => {
-    const flattenedPermissions = flattenTrees(permissions!);
-    const permissionRoutes = transformPermissionToMenuRoutes(permissions || []);
-    console.log('flattenedPermissions', flattenedPermissions);
-    // console.log(permissionRoutes);
+    if (!permissions) return [];
+    const permissionRoutes = transformPermissionToMenuRoutes(permissions);
+    console.log(permissionRoutes);
     return [...permissionRoutes];
   }, [permissions]);
 }
@@ -83,6 +82,7 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
         disabled: disabled,
         menuName,
       },
+      component,
     };
 
     if (sort) appRoute.order = sort;

@@ -26,6 +26,7 @@ module.exports = {
   },
   /* ESLint 中基础配置需要继承的配置 */
   extends: [
+    "plugin:react/recommended",
     'airbnb',
     'airbnb-typescript',
     'airbnb/hooks',
@@ -35,6 +36,8 @@ module.exports = {
     'plugin:import/warnings',
     'prettier', // 增加 prettier 相关的校验规则
     'plugin:prettier/recommended', // 开启 Prettier 插件推荐的规则
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   /* ESLint文件所依赖的插件 */
   plugins: [
@@ -60,6 +63,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'space-before-function-paren': 'off',
     'class-methods-use-this': 'off',
+
 
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/interactive-supports-focus': 'off',

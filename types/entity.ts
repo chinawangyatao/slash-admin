@@ -5,6 +5,9 @@ export interface UserToken {
   refreshToken?: string;
   currentAuthority?: string;
 }
+export interface UserPermission {
+  permission?: string;
+}
 
 export interface PermissionsList {
   menuId?: number;
