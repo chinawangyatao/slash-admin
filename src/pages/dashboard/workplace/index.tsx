@@ -24,7 +24,6 @@ function Workbench() {
           </Space>
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={8}>
           <TotalCard
@@ -56,7 +55,6 @@ function Workbench() {
           />
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={12} lg={8}>
           <CurrentDownload />
@@ -65,7 +63,6 @@ function Workbench() {
           <AreaDownload />
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={23} md={12} lg={16}>
           <NewInvoice />
@@ -74,7 +71,6 @@ function Workbench() {
           <TopRelated />
         </Col>
       </Row>
-
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={12}>
           <TopInstalled />

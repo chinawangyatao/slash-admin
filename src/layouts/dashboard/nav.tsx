@@ -66,7 +66,6 @@ export default function Nav(props: Props) {
   useEffect(() => {
     const menuRoutes = menuFilter(permissionRoutes);
     const menus = routeToMenuFn(menuRoutes);
-    console.log(menus);
     setMenuList(menus);
   }, [permissionRoutes, routeToMenuFn]);
 
@@ -98,7 +97,8 @@ export default function Nav(props: Props) {
       return;
     }
 
-    navigate(key);
+    // @ts-ignore
+    navigate(nextLink.path);
     props?.closeSideBarDrawer?.();
   };
 

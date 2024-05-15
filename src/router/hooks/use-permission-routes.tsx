@@ -11,7 +11,6 @@ import { PermissionsList } from '#/entity';
 import { PermissionType } from '#/enum';
 import { AppRouteObject } from '#/router';
 // @ts-ignore
-import { getRoutesFromModules } from '@/router/utils.ts';
 
 // 使用 import.meta.glob 获取所有路由组件
 const entryPath = '/src/pages';
@@ -26,6 +25,8 @@ export const pagesSelect = Object.entries(pages).map(([path]) => {
 
 // 构建绝对路径的函数
 function resolveComponent(path: string) {
+  console.log(path);
+  console.log(pages);
   return pages[`${entryPath}${path}.tsx`];
 }
 
@@ -39,10 +40,10 @@ export function usePermissionRoutes() {
   // }, []);
 
   const permissions = useUserPermission();
-
   return useMemo(() => {
-    if (!permissions) return [];
-    const permissionRoutes = transformPermissionToMenuRoutes(permissions);
+    // const flattenedPermissions = flattenTrees(permissions!);
+
+    const permissionRoutes = transformPermissionToMenuRoutes(permissions || []);
     console.log(permissionRoutes);
     return [...permissionRoutes];
   }, [permissions]);
@@ -62,7 +63,6 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
       component,
       isFrame,
       path,
-      name,
       sort,
       visible,
       disabled,
@@ -73,16 +73,15 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
     } = permission;
 
     const appRoute: AppRouteObject = {
-      path: path,
+      path,
       meta: {
-        label: name,
+        label: menuName,
         key: component === '' ? path : component,
         hideMenu: visible,
-        hideTab: hideTab,
-        disabled: disabled,
+        hideTab,
+        disabled,
         menuName,
       },
-      component,
     };
 
     if (sort) appRoute.order = sort;
@@ -119,6 +118,7 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
       }
     } else if (menuType === PermissionType.MENU) {
       const Element = lazy(resolveComponent(component!) as any);
+      console.log(resolveComponent(component!));
       if (isFrame) {
         appRoute.element = <Element src={isFrame} />;
       } else {

@@ -68,7 +68,7 @@ export default function Header({ className = '', offsetTop = false }: Props) {
             ) : (
               <Logo />
             )}
-            <div className="ml-4 hidden md:block">{breadCrumb ? <BreadCrumb /> : null}</div>
+            {/* <div className="ml-4 hidden md:block">{breadCrumb ? <BreadCrumb /> : null}</div> */}
           </div>
 
           <div className="flex">

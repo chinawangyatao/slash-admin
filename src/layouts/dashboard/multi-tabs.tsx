@@ -28,6 +28,7 @@ type Props = {
   offsetTop?: boolean;
 };
 export default function MultiTabs({ offsetTop = false }: Props) {
+  // const { t } = useTranslation();
   const { push } = useRouter();
   const scrollContainer = useRef<HTMLDivElement>(null);
   const [hoveringTabKey, setHoveringTabKey] = useState('');
@@ -225,7 +226,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
             onMouseLeave={() => setHoveringTabKey('')}
           >
             <div>
-              {SpecialTabRenderMap[tab.label] ? SpecialTabRenderMap[tab.label](tab) : tab.label}
+              {/* {SpecialTabRenderMap[tab.label] ? SpecialTabRenderMap[tab.label](tab) : tab.label} */}
             </div>
             <Iconify
               icon="ion:close-outline"
@@ -255,7 +256,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
       menuClick,
       closeTab,
       calcTabStyle,
-      SpecialTabRenderMap,
+      // SpecialTabRenderMap,
     ],
   );
 
