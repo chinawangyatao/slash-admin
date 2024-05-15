@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -15,25 +16,23 @@ import {
   TreeSelect,
   message,
   Switch,
+  Descriptions,
 } from 'antd';
+import Search from 'antd/es/input/Search';
+import TextArea from 'antd/es/input/TextArea';
 import Table, { ColumnsType } from 'antd/es/table';
+import { useEffect, useRef, useState } from 'react';
 
-import { USER_LIST } from '@/_mock/assets';
+import dictService from '@/api/services/dictService.ts';
+import sysUserService from '@/api/services/sysUserService.ts';
 import { IconButton, Iconify } from '@/components/icon';
 import { usePathname, useRouter } from '@/router/hooks';
 import ProTag from '@/theme/antd/components/tag';
 import { useThemeToken } from '@/theme/hooks';
-
-import type { Role, UserInfo } from '#/entity';
-import { BasicStatus } from '#/enum';
-import Search from 'antd/es/input/Search';
-import { useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import sysUserService from '@/api/services/sysUserService.ts';
-import TextArea from 'antd/es/input/TextArea';
-import dictService from '@/api/services/dictService.ts';
-import { IGetSysUser } from '#/api.ts';
 import { fHour } from '@/utils/format-day.ts';
+
+import { IGetSysUser } from '#/api.ts';
+import type { UserInfo } from '#/entity';
 
 export default function RolePage() {
   const { colorTextSecondary } = useThemeToken();
@@ -44,6 +43,8 @@ export default function RolePage() {
   const [treeData, setTreeData] = useState();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [titleDrawer, setTitleDrawer] = useState('');
+  const [detailData, setDetailData] = useState<any>();
+  const [userId, setUserId] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const paramsSysUser = useRef<IGetSysUser>({
@@ -64,10 +65,20 @@ export default function RolePage() {
   // sys_user_sex
   const updateSysUser = useMutation(sysUserService.updateSysUser);
   const findSysUser = useQuery(['findSysUser'], () => sysUserService.findSysUser(paramsSysUser));
+  const findSysUserById = useQuery(['findSysUserById'], () =>
+    sysUserService.findSysUserById(userId),
+  );
 
   useEffect(() => {
     if (deptTreeData.isSuccess) setTreeData(deptTreeData.data.data);
   }, [deptTreeData.data, dictRole.data, dictPost.data, dictSex.data, findSysUser.data]);
+
+  const detailHandle = (id: string | null) => {
+    setUserId(id);
+    setTitleDrawer('详情');
+    setOpenDrawer(true);
+  };
+
   const searchOnChange = (value: string) => {
     messageApi.warning('尚未开发，//todo');
   };
@@ -83,17 +94,15 @@ export default function RolePage() {
       .validateFields()
       .then(async (res) => {
         await updateSysUser.mutateAsync(res);
-        if (updateSysUser.isSuccess) {
-          if (updateSysUser.data.success) {
-            form.resetFields();
-            setOpenDrawer(false);
-          } else {
-            messageApi.error(updateSysUser.data?.errorMessage as any);
-          }
+        if (updateSysUser.data?.success) {
+          form.resetFields();
+          setOpenDrawer(false);
+        } else {
+          messageApi.error(updateSysUser.data?.errorMessage as any);
         }
       })
-      .catch((e) => {
-        messageApi.error(e);
+      .catch(() => {
+        messageApi.error('请填必填项');
       });
   };
 
@@ -152,12 +161,7 @@ export default function RolePage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <IconButton
-            onClick={() => {
-              console.log(record);
-              // push(`${pathname}/${record.id}`);
-            }}
-          >
+          <IconButton onClick={() => detailHandle(record.userId)}>
             <Iconify icon="mdi:card-account-details" size={18} />
           </IconButton>
           <IconButton onClick={() => {}}>
@@ -177,13 +181,15 @@ export default function RolePage() {
     <>
       {contextHolder}
       <Row>
-        <Col span={5} className={'pr-5'}>
+        <Col span={5} className="pr-5">
           <Search style={{ marginBottom: 8 }} placeholder="搜素部门" onSearch={searchOnChange} />
           <Tree
+            defaultExpandAll
+            autoExpandParent
             fieldNames={{ title: 'label', key: 'value' }}
-            onExpand={onExpand}
-            expandedKeys={expandedKeys}
-            autoExpandParent={autoExpandParent}
+            // onExpand={onExpand}
+            // expandedKeys={expandedKeys}
+            // autoExpandParent={autoExpandParent}
             treeData={treeData || []}
           />
         </Col>
@@ -194,8 +200,8 @@ export default function RolePage() {
               <Button
                 type="primary"
                 onClick={() => {
-                  setOpenDrawer(true);
                   setTitleDrawer('新增');
+                  setOpenDrawer(true);
                 }}
               >
                 新增
@@ -220,102 +226,110 @@ export default function RolePage() {
         title={titleDrawer}
         onClose={() => setOpenDrawer(false)}
         footer={
-          <Space>
-            <Button disabled={updateSysUser.isLoading} type={'primary'} onClick={submitHandle}>
-              确定
-            </Button>
-            <Button
-              disabled={updateSysUser.isLoading}
-              type={'text'}
-              onClick={() => {
-                form.resetFields();
-                setOpenDrawer(false);
-              }}
-            >
-              取消
-            </Button>
-          </Space>
+          titleDrawer !== '详情' ? (
+            <Space>
+              <Button disabled={updateSysUser.isLoading} type="primary" onClick={submitHandle}>
+                确定
+              </Button>
+              <Button
+                disabled={updateSysUser.isLoading}
+                type="text"
+                onClick={() => {
+                  form.resetFields();
+                  setOpenDrawer(false);
+                }}
+              >
+                取消
+              </Button>
+            </Space>
+          ) : null
         }
       >
-        <Spin spinning={updateSysUser.isLoading}>
-          <Form form={form} labelCol={{ span: 5 }}>
-            <Form.Item
-              label={'昵称'}
-              name={'nickName'}
-              rules={[{ message: '请输入昵称', required: true }]}
-            >
-              <Input placeholder={'请输入昵称'} />
-            </Form.Item>
-            <Form.Item
-              label={'部门'}
-              name={'deptId'}
-              rules={[{ message: '请输入部门', required: true }]}
-            >
-              <TreeSelect
-                showSearch
-                style={{ width: '100%' }}
-                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                placeholder="请选择"
-                allowClear
-                treeDefaultExpandAll
-                onChange={selectTreeChange}
-                treeData={treeData}
-                onPopupScroll={onPopupScroll}
-              />
-            </Form.Item>
-            <Form.Item
-              label={'用户名'}
-              name={'username'}
-              rules={[{ message: '请输入用户名', required: true }]}
-            >
-              <Input placeholder={'请输入用户名'} />
-            </Form.Item>
-            <Form.Item
-              label={'手机号'}
-              name={'phone'}
-              rules={[{ message: '请输入手机号', required: true }]}
-            >
-              <Input placeholder={'请输入手机号'} />
-            </Form.Item>
-            <Form.Item label={'性别'} name={'sex'}>
-              <Select placeholder={'请选择性别'} options={dictSex.data?.data || []}></Select>
-            </Form.Item>
-            <Form.Item
-              label={'电子邮箱'}
-              name={'email'}
-              rules={[{ message: '请输入电子邮箱', required: true }]}
-            >
-              <Input placeholder={'请输入电子邮箱'} />
-            </Form.Item>
-            <Form.Item
-              label={'职位'}
-              name={'postId'}
-              rules={[{ message: '请选择职位', required: true }]}
-            >
-              <Select placeholder={'请选择职位'} options={dictPost.data?.data || []}></Select>
-            </Form.Item>
-            <Form.Item
-              label={'角色'}
-              name={'roleId'}
-              rules={[{ message: '请选择角色', required: true }]}
-            >
-              <Select placeholder={'请选择角色'} options={dictRole.data?.data || []}></Select>
-            </Form.Item>
-            <Form.Item
-              label={'状态'}
-              name={'status'}
-              rules={[{ message: '请选择状态', required: true }]}
-            >
-              <Radio.Group>
-                <Radio value={'2'}>启用</Radio>
-                <Radio value={'1'}>停用</Radio>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item label={'备注'} name={'remark'}>
-              <TextArea />
-            </Form.Item>
-          </Form>
-        </Spin>
+        {titleDrawer !== '详情' ? (
+          <Spin spinning={updateSysUser.isLoading}>
+            <Form form={form} labelCol={{ span: 5 }}>
+              <Form.Item
+                label="昵称"
+                name="nickName"
+                rules={[{ message: '请输入昵称', required: true }]}
+              >
+                <Input placeholder="请输入昵称" />
+              </Form.Item>
+              <Form.Item
+                label="部门"
+                name="deptId"
+                rules={[{ message: '请输入部门', required: true }]}
+              >
+                <TreeSelect
+                  showSearch
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  placeholder="请选择"
+                  allowClear
+                  treeDefaultExpandAll
+                  onChange={selectTreeChange}
+                  treeData={treeData}
+                  onPopupScroll={onPopupScroll}
+                />
+              </Form.Item>
+              <Form.Item
+                label="用户名"
+                name="username"
+                rules={[{ message: '请输入用户名', required: true }]}
+              >
+                <Input placeholder="请输入用户名" />
+              </Form.Item>
+              <Form.Item
+                label="手机号"
+                name="phone"
+                rules={[{ message: '请输入手机号', required: true }]}
+              >
+                <Input placeholder="请输入手机号" />
+              </Form.Item>
+              <Form.Item label="性别" name="sex">
+                <Select placeholder="请选择性别" options={dictSex.data?.data || []} />
+              </Form.Item>
+              <Form.Item
+                label="电子邮箱"
+                name="email"
+                rules={[{ message: '请输入电子邮箱', required: true }]}
+              >
+                <Input placeholder="请输入电子邮箱" />
+              </Form.Item>
+              <Form.Item
+                label="职位"
+                name="postId"
+                rules={[{ message: '请选择职位', required: true }]}
+              >
+                <Select placeholder="请选择职位" options={dictPost.data?.data || []} />
+              </Form.Item>
+              <Form.Item
+                label="角色"
+                name="roleId"
+                rules={[{ message: '请选择角色', required: true }]}
+              >
+                <Select placeholder="请选择角色" options={dictRole.data?.data || []} />
+              </Form.Item>
+              <Form.Item
+                label="状态"
+                name="status"
+                rules={[{ message: '请选择状态', required: true }]}
+              >
+                <Radio.Group>
+                  <Radio value="2">启用</Radio>
+                  <Radio value="1">停用</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item label="备注" name="remark">
+                <TextArea />
+              </Form.Item>
+            </Form>
+          </Spin>
+        ) : (
+          <Spin spinning={findSysUserById.isLoading}>
+            <Descriptions column={1} labelStyle={{ width: '80px' }} items={detailData} />
+          </Spin>
+        )}
       </Drawer>
     </>
   );

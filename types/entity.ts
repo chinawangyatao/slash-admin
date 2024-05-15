@@ -34,6 +34,7 @@ export interface PermissionsList {
 }
 
 export interface UserInfo {
+  userId: string;
   id: string;
   email: string;
   username: string;
