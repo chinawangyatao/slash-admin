@@ -9,6 +9,7 @@
       "DOM",
       "DOM.Iterable"
     ],
+    "ignoreDeprecations": "5.0",
     // 要包含的库文件。DOM、DOM.Iterable 和 ESNext 库文件是 TypeScript 开发中比较基础的依赖。
     "useDefineForClassFields": true,
     "skipLibCheck": true,
@@ -39,23 +40,13 @@
     // 而某些工具和库可能需要以 ES6 模块的方式导入这些 CommonJS 模块，这时候就可以开启 esModuleInterop 选项。
     // 开启后，在导入 CommonJS 模块时不需要再使用默认导出才能正确引入，也不需要手动处理 require() 和 module.exports。
     // 这使得导入和使用 CommonJS 模块的过程变得更加简洁方便。
-    "esModuleInterop": true,
-    /* Linting */
-    "strict": false,
-    // 启用所有严格类型检查选项
-    "strictNullChecks": true,
-    // 对空值进行严格检查
-    "noImplicitAny": true,
-    // 禁止隐式any类型
-    "noUnusedLocals": true,
-    // 消除未使用变量产生的警告
-    "noUnusedParameters": true,
-    // 消除未使用参数产生的警告
-    "noFallthroughCasesInSwitch": true,
-    // 避免 switch 语句掉入陷阱
-    "useUnknownInCatchVariables": false,
-    // 为 true 时，在 catch 块中声明的变量类型会被视为 unknown 而非默认的 any。
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "strict": true,
     // 禁用隐式 any 类型的警告
     "baseUrl": ".",
     /* alias */

@@ -52,6 +52,7 @@ export interface RouteMeta {
   menuName?: string;
 }
 export type AppRouteObject = {
+  path?: string;
   order?: number;
   meta?: RouteMeta;
   children?: AppRouteObject[];

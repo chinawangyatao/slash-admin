@@ -64,7 +64,7 @@ const DASHBOARD_PERMISSION = {
       name: 'Workbench',
       type: PermissionType.MENU,
       route: 'workbench',
-      component: '/dashboard/workbench/index.tsx',
+      component: '/dashboard/workbench/analysis.tsx',
     },
     {
       id: '9710971640510357',
@@ -73,7 +73,7 @@ const DASHBOARD_PERMISSION = {
       name: 'Analysis',
       type: PermissionType.MENU,
       route: 'analysis',
-      component: '/dashboard/analysis/index.tsx',
+      component: '/dashboard/analysis/analysis.tsx',
     },
   ],
 };
@@ -102,7 +102,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'Profile',
           type: PermissionType.MENU,
           route: 'profile',
-          component: '/management/user/profile/index.tsx',
+          component: '/management/user/profile/analysis.tsx',
         },
         {
           id: '2516598794787938',
@@ -111,7 +111,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'Account',
           type: PermissionType.MENU,
           route: 'account',
-          component: '/management/user/account/index.tsx',
+          component: '/management/user/account/analysis.tsx',
         },
       ],
     },
@@ -130,7 +130,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'Organization',
           type: PermissionType.MENU,
           route: 'organization',
-          component: '/management/system/organization/index.tsx',
+          component: '/management/system/organization/analysis.tsx',
         },
         {
           id: '4359580910369984',
@@ -139,7 +139,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'Permission',
           type: PermissionType.MENU,
           route: 'permission',
-          component: '/management/system/permission/index.tsx',
+          component: '/management/system/permission/analysis.tsx',
         },
         {
           id: '1689241785490759',
@@ -148,7 +148,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'Role',
           type: PermissionType.MENU,
           route: 'role',
-          component: '/management/system/role/index.tsx',
+          component: '/management/system/role/analysis.tsx',
         },
         {
           id: '0157880245365433',
@@ -157,7 +157,7 @@ const MANAGEMENT_PERMISSION = {
           name: 'User',
           type: PermissionType.MENU,
           route: 'user',
-          component: '/management/system/user/index.tsx',
+          component: '/management/system/user/analysis.tsx',
         },
         {
           id: '0157880245365434',
@@ -190,7 +190,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Icon',
       type: PermissionType.MENU,
       route: 'icon',
-      component: '/components/icon/index.tsx',
+      component: '/components/icon/analysis.tsx',
     },
     {
       id: '6755238352318767',
@@ -199,7 +199,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Animate',
       type: PermissionType.MENU,
       route: 'animate',
-      component: '/components/animate/index.tsx',
+      component: '/components/animate/analysis.tsx',
     },
     {
       id: '9992476513546805',
@@ -208,7 +208,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Scroll',
       type: PermissionType.MENU,
       route: 'scroll',
-      component: '/components/scroll/index.tsx',
+      component: '/components/scroll/analysis.tsx',
     },
     {
       id: '1755562695856395',
@@ -217,7 +217,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Markdown',
       type: PermissionType.MENU,
       route: 'markdown',
-      component: '/components/markdown/index.tsx',
+      component: '/components/markdown/analysis.tsx',
     },
     {
       id: '2122547769468069',
@@ -226,7 +226,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Editor',
       type: PermissionType.MENU,
       route: 'editor',
-      component: '/components/editor/index.tsx',
+      component: '/components/editor/analysis.tsx',
     },
     {
       id: '2501920741714350',
@@ -235,7 +235,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Multi Language',
       type: PermissionType.MENU,
       route: 'i18n',
-      component: '/components/multi-language/index.tsx',
+      component: '/components/multi-language/analysis.tsx',
     },
     {
       id: '2013577074467956',
@@ -244,7 +244,7 @@ const COMPONENTS_PERMISSION = {
       name: 'upload',
       type: PermissionType.MENU,
       route: 'Upload',
-      component: '/components/upload/index.tsx',
+      component: '/components/upload/analysis.tsx',
     },
     {
       id: '7749726274771764',
@@ -253,7 +253,7 @@ const COMPONENTS_PERMISSION = {
       name: 'Chart',
       type: PermissionType.MENU,
       route: 'chart',
-      component: '/components/chart/index.tsx',
+      component: '/components/chart/analysis.tsx',
     },
   ],
 };
@@ -274,7 +274,7 @@ const FUNCTIONS_PERMISSION = {
       name: 'Clipboard',
       type: PermissionType.MENU,
       route: 'clipboard',
-      component: '/functions/clipboard/index.tsx',
+      component: '/functions/clipboard/analysis.tsx',
     },
   ],
 };
@@ -295,7 +295,7 @@ const MENU_LEVEL_PERMISSION = {
       name: 'Menu Level 1a',
       type: PermissionType.MENU,
       route: 'menu-level-1a',
-      component: '/menu-level/menu-level-1a/index.tsx',
+      component: '/menu-level/menu-level-1a/analysis.tsx',
     },
     {
       id: '7572529636800586',
@@ -312,7 +312,7 @@ const MENU_LEVEL_PERMISSION = {
           name: 'Menu Level 2a',
           type: PermissionType.MENU,
           route: 'menu-level-2a',
-          component: '/menu-level/menu-level-1b/menu-level-2a/index.tsx',
+          component: '/menu-level/menu-level-1b/menu-level-2a/analysis.tsx',
         },
         {
           id: '4873136353891364',
@@ -329,7 +329,7 @@ const MENU_LEVEL_PERMISSION = {
               name: 'Menu Level 3a',
               type: PermissionType.MENU,
               route: 'menu-level-3a',
-              component: '/menu-level/menu-level-1b/menu-level-2b/menu-level-3a/index.tsx',
+              component: '/menu-level/menu-level-1b/menu-level-2b/menu-level-3a/analysis.tsx',
             },
             {
               id: '3298034742548454',
@@ -338,7 +338,7 @@ const MENU_LEVEL_PERMISSION = {
               name: 'Menu Level 3b',
               type: PermissionType.MENU,
               route: 'menu-level-3b',
-              component: '/menu-level/menu-level-1b/menu-level-2b/menu-level-3b/index.tsx',
+              component: '/menu-level/menu-level-1b/menu-level-2b/menu-level-3b/analysis.tsx',
             },
           ],
         },
@@ -394,7 +394,7 @@ const OTHERS_PERMISSION = [
     icon: 'solar:calendar-bold-duotone',
     type: PermissionType.MENU,
     route: 'calendar',
-    component: '/sys/others/calendar/index.tsx',
+    component: '/sys/others/calendar/analysis.tsx',
   },
   {
     id: '3513985683886393',
@@ -404,7 +404,7 @@ const OTHERS_PERMISSION = [
     icon: 'solar:clipboard-bold-duotone',
     type: PermissionType.MENU,
     route: 'kanban',
-    component: '/sys/others/kanban/index.tsx',
+    component: '/sys/others/kanban/analysis.tsx',
   },
   {
     id: '5455837930804461',
@@ -415,7 +415,7 @@ const OTHERS_PERMISSION = [
     type: PermissionType.MENU,
     route: 'disabled',
     status: BasicStatus.DISABLE,
-    component: '/sys/others/calendar/index.tsx',
+    component: '/sys/others/calendar/analysis.tsx',
   },
   {
     id: '7728048658221587',
@@ -455,7 +455,7 @@ const OTHERS_PERMISSION = [
         name: 'Iframe',
         type: PermissionType.MENU,
         route: 'frame',
-        component: '/sys/others/iframe/index.tsx',
+        component: '/sys/others/iframe/analysis.tsx',
         frameSrc: 'https://ant.design/',
       },
     ],

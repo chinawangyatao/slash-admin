@@ -81,6 +81,7 @@ export interface Role {
   permission?: Permission[];
 }
 
+// 验证码
 export interface Captcha {
   errorCode: 'string';
   errorMessage: 'string';
@@ -92,4 +93,12 @@ export interface Captcha {
   data: 'string';
   id: 'string';
   msg: 'string';
+}
+
+export type Order = 'desc' | 'asc';
+
+export interface IPageSize {
+  current: number;
+  pageSize: number;
+  createdAtOrder?: Order;
 }

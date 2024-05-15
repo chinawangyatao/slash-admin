@@ -6,7 +6,7 @@ import { CircleLoading } from '@/components/loading';
 
 import { AppRouteObject } from '#/router';
 
-const HomePage = lazy(() => import(`@/pages/dashboard/workbench`));
+const HomePage = lazy(() => import(`@/pages/dashboard/workplace`));
 const Analysis = lazy(() => import('@/pages/dashboard/analysis'));
 
 const dashboard: AppRouteObject = {

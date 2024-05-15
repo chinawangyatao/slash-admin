@@ -25,8 +25,6 @@ export const pagesSelect = Object.entries(pages).map(([path]) => {
 
 // 构建绝对路径的函数
 function resolveComponent(path: string) {
-  console.log(path);
-  console.log(pages);
   return pages[`${entryPath}${path}.tsx`];
 }
 
@@ -44,7 +42,6 @@ export function usePermissionRoutes() {
     // const flattenedPermissions = flattenTrees(permissions!);
 
     const permissionRoutes = transformPermissionToMenuRoutes(permissions || []);
-    console.log(permissionRoutes);
     return [...permissionRoutes];
   }, [permissions]);
 }
@@ -74,9 +71,10 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
 
     const appRoute: AppRouteObject = {
       path,
+      // @ts-ignore
       meta: {
         label: menuName,
-        key: component === '' ? path : component,
+        key: path,
         hideMenu: visible,
         hideTab,
         disabled,
@@ -118,7 +116,6 @@ function transformPermissionToMenuRoutes(permissions: PermissionsList[]) {
       }
     } else if (menuType === PermissionType.MENU) {
       const Element = lazy(resolveComponent(component!) as any);
-      console.log(resolveComponent(component!));
       if (isFrame) {
         appRoute.element = <Element src={isFrame} />;
       } else {

@@ -40,7 +40,7 @@ export default function PermissionPage() {
       setPermissionModalProps((prev) => ({ ...prev, show: false }));
     },
   });
-  const columns: ColumnsType<Permission> = [
+  const columns: any = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -51,7 +51,11 @@ export default function PermissionPage() {
       title: 'Type',
       dataIndex: 'type',
       width: 60,
-      render: (_, record) => <ProTag color="processing">{PermissionType[record.type]}</ProTag>,
+      render: (_, record) => (
+        <ProTag color="processing">
+          {PermissionType[record.type as unknown as keyof typeof PermissionType]}
+        </ProTag>
+      ),
     },
     {
       title: 'Icon',

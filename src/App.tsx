@@ -1,4 +1,4 @@
-import { App as AntdApp } from 'antd';
+import { App as AntdApp, message } from 'antd';
 import { Helmet } from 'react-helmet-async';
 
 import Logo from '@/assets/images/logo.png';
@@ -6,7 +6,6 @@ import Router from '@/router/index';
 import AntdConfig from '@/theme/antd';
 
 import { MotionLazy } from './components/animate/motion-lazy';
-
 function App() {
   return (
     <AntdConfig>
@@ -16,7 +15,6 @@ function App() {
             <title>Admin</title>
             <link rel="icon" href={Logo} />
           </Helmet>
-
           <Router />
         </MotionLazy>
       </AntdApp>
