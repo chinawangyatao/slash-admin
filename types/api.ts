@@ -36,4 +36,32 @@ export interface ISysUser {
   username: string;
 }
 // 查询
-export interface IGetSysUser extends IPageSize {}
+export interface IGetSysUser extends IPageSize {
+  [key: string]: any;
+}
+
+// 创建菜单
+/**
+ * Menu
+ * 菜单
+ */
+export type MenuListItem = {
+  children?: MenuListItem[] | undefined;
+  component?: string;
+  createdAt?: Date;
+  dataScope: string;
+  icon?: string;
+  isFrame?: string;
+  visible?: boolean;
+  menuId?: number;
+  menuName?: string;
+  menuType?: string;
+  parentId?: number;
+  path?: string;
+  paths?: string;
+  permission?: string;
+  sort?: number;
+  sysApi?: any[];
+  apis?: number[];
+  title?: string;
+};

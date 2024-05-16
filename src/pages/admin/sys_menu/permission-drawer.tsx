@@ -1,4 +1,15 @@
-import { AutoComplete, Form, Input, InputNumber, Modal, Radio, TreeSelect } from 'antd';
+import {
+  AutoComplete,
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Radio,
+  Space,
+  TreeSelect,
+} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 import { pagesSelect } from '@/router/hooks/use-permission-routes';
@@ -13,12 +24,15 @@ export type PermissionModalProps = {
   show: boolean;
   onOk: VoidFunction;
   onCancel: VoidFunction;
+  treeData?: any;
+  [key: string]: any;
 };
 
-export default function PermissionModal({
+export default function PermissionDrawer({
   title,
   show,
   formValue,
+  treeData,
   onOk,
   onCancel,
 }: PermissionModalProps) {
@@ -62,100 +76,100 @@ export default function PermissionModal({
   }, [formValue, form, getParentNameById]);
 
   return (
-    <Modal title={title} open={show} onOk={onOk} onCancel={onCancel}>
+    <Drawer
+      destroyOnClose
+      width={550}
+      title={title}
+      open={show}
+      onClose={onCancel}
+      footer={
+        <Space>
+          <Button
+            type={'primary'}
+            onClick={() => {
+              form.validateFields().then((formData) => {
+                onOk(title, { ...formData, menuId: formValue.menuId });
+              });
+            }}
+          >
+            确定
+          </Button>
+          <Button type={'text'} onClick={onCancel}>
+            取消
+          </Button>
+        </Space>
+      }
+    >
       <Form
         initialValues={formValue}
         form={form}
-        labelCol={{ span: 4 }}
+        labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
         layout="horizontal"
       >
-        <Form.Item<Permission> label="Type" name="type" required>
+        <Form.Item label="类型" name="menuType" required>
           <Radio.Group optionType="button" buttonStyle="solid">
-            <Radio value={PermissionType.CATALOGUE}>CATALOGUE</Radio>
-            <Radio value={PermissionType.MENU}>MENU</Radio>
+            <Radio value={PermissionType.CATALOGUE}>目录</Radio>
+            <Radio value={PermissionType.MENU}>菜单</Radio>
+            <Radio value={PermissionType.BUTTON}>按钮</Radio>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item<Permission> label="Name" name="name" required>
+        <Form.Item label="菜单名称" name="menuName" required>
           <Input />
         </Form.Item>
 
-        <Form.Item<Permission>
-          label="Label"
-          name="label"
+        <Form.Item
+          label="国际化key"
+          name="title"
           required
-          tooltip="internationalization config"
+          tooltip="菜单多语言key，对应多语言的说明信息 config"
         >
           <Input />
         </Form.Item>
 
-        <Form.Item<Permission> label="Parent" name="parentId" required>
+        <Form.Item label="上级菜单" name="parentId" required>
           <TreeSelect
             fieldNames={{
-              label: 'name',
-              value: 'id',
+              label: 'menuName',
+              value: 'menuId',
               children: 'children',
             }}
             allowClear
-            treeData={permissions}
+            treeData={treeData}
             onChange={(_value, labelList) => {
               updateCompOptions(labelList[0] as string);
             }}
           />
         </Form.Item>
 
-        <Form.Item<Permission> label="Route" name="route" required>
-          <Input />
-        </Form.Item>
-
         <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+          label="路径"
+          name="path"
+          tooltip="访问此页面自定义的url地址，建议/开头书写，例如/app-name"
+          required
         >
-          {({ getFieldValue }) => {
-            if (getFieldValue('type') === PermissionType.MENU) {
-              return (
-                <Form.Item<Permission>
-                  label="Component"
-                  name="component"
-                  required={getFieldValue('type') === PermissionType.MENU}
-                >
-                  <AutoComplete
-                    options={compOptions}
-                    filterOption={(input, option) =>
-                      ((option?.label || '') as string).toLowerCase().includes(input.toLowerCase())
-                    }
-                  />
-                </Form.Item>
-              );
-            }
-            return null;
-          }}
-        </Form.Item>
-
-        <Form.Item<Permission> label="Icon" name="icon" tooltip="local icon should start with ic">
           <Input />
         </Form.Item>
 
-        <Form.Item<Permission> label="Hide" name="hide" tooltip="hide in menu">
-          <Radio.Group optionType="button" buttonStyle="solid">
-            <Radio value={false}>Show</Radio>
-            <Radio value>Hide</Radio>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form.Item<Permission> label="Order" name="order">
+        <Form.Item label="排序" name="sort" required>
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
 
-        <Form.Item<Permission> label="Status" name="status" required>
+        <Form.Item label="Icon" name="icon" tooltip="local icon should start with ic">
+          <Input />
+        </Form.Item>
+
+        <Form.Item label="隐藏" name="visible" tooltip="hide in menu">
           <Radio.Group optionType="button" buttonStyle="solid">
-            <Radio value={BasicStatus.ENABLE}> Enable </Radio>
-            <Radio value={BasicStatus.DISABLE}> Disable </Radio>
+            <Radio value={false}>显示</Radio>
+            <Radio value>隐藏</Radio>
           </Radio.Group>
         </Form.Item>
+        <Form.Item label="权限" name="permission">
+          <Input />
+        </Form.Item>
       </Form>
-    </Modal>
+    </Drawer>
   );
 }
