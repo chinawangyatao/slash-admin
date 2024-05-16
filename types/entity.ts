@@ -57,9 +57,11 @@ export interface Organization {
 export interface Permission {
   id: string;
   parentId: string;
+  menuId?: number;
+  menuName?: string;
   name: string;
   label: string;
-  type: PermissionType;
+  menuType: PermissionType;
   route: string;
   status?: BasicStatus;
   order?: number;
@@ -69,6 +71,7 @@ export interface Permission {
   hideTab?: boolean;
   frameSrc?: string;
   newFeature?: boolean;
+  [key: string]: any;
   children?: Permission[];
 }
 

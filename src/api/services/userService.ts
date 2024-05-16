@@ -23,7 +23,7 @@ export enum UserApi {
   UserID = '/user',
   Captcha = '/captcha',
   User = '/getinfo',
-  MenuList = '/menurole',
+  MenuRole = '/menurole',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data });
@@ -33,7 +33,7 @@ const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.Use
 const findCaptcha = () => apiClient.get<Captcha>({ url: UserApi.Captcha });
 const findUserInfo = () => apiClient.get({ url: UserApi.User });
 
-const findMenu = () => apiClient.get({ url: UserApi.MenuList });
+const findMenu = () => apiClient.get({ url: UserApi.MenuRole });
 
 export default {
   signin,
