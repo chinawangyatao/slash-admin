@@ -21,6 +21,7 @@ export enum SySUserApi {
   SysUser = '/sys-user',
   SysUserStatus = '/user/status',
   Menu = '/menu',
+  Role = '/role',
 }
 
 const findTreeData = () => apiClient.get<ApiResponse<IDeptTree>>({ url: SySUserApi.DeptTree });
@@ -54,6 +55,11 @@ const createMenu = (data: MenuListItem) => apiClient.post({ url: SySUserApi.Menu
 // 更新菜单
 const updateMenu = (data: MenuListItem) =>
   apiClient.put({ url: SySUserApi.Menu + `/${data.menuId}`, data });
+
+// 找角色
+const findRole = (params: React.MutableRefObject<IGetSysUser>) =>
+  apiClient.get({ url: SySUserApi.Role, params });
+
 export default {
   findTreeData,
   updateSysUser,
@@ -66,4 +72,5 @@ export default {
   deleteMenu,
   createMenu,
   updateMenu,
+  findRole,
 };

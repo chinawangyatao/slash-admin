@@ -99,7 +99,7 @@ export interface Captcha {
   msg: 'string';
 }
 
-export type Order = 'desc' | 'asc';
+export type Order = 'desc' | 'asc' | null;
 
 export interface IPageSize {
   current: number;

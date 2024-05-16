@@ -1,6 +1,6 @@
-import { Button, Card, Popconfirm } from 'antd';
+import { Button, Card, message, Popconfirm } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { ROLE_LIST } from '@/_mock/assets';
 import { IconButton, Iconify } from '@/components/icon';
@@ -10,6 +10,10 @@ import { RoleModal, RoleModalProps } from './role-modal';
 
 import { Role } from '#/entity';
 import { BasicStatus } from '#/enum';
+import { useQuery } from '@tanstack/react-query';
+import sysService from '@/api/services/sysService.ts';
+import { IGetSysUser } from '#/api.ts';
+import { fHour } from '@/utils/format-day.ts';
 
 const ROLES: Role[] = ROLE_LIST;
 
@@ -23,7 +27,7 @@ const DEFAULE_ROLE_VALUE: Role = {
 export default function RolePage() {
   const [roleModalPros, setRoleModalProps] = useState<RoleModalProps>({
     formValue: { ...DEFAULE_ROLE_VALUE },
-    title: 'New',
+    title: '新增',
     show: false,
     onOk: () => {
       setRoleModalProps((prev) => ({ ...prev, show: false }));
@@ -32,31 +36,42 @@ export default function RolePage() {
       setRoleModalProps((prev) => ({ ...prev, show: false }));
     },
   });
+  const [messageApi, contextHolder] = message.useMessage();
+  const paramsSysUser = useRef<IGetSysUser>({
+    pageSize: 10,
+    current: 1,
+    createdAtOrder: null,
+  });
+
+  const findRole = useQuery(['findRole'], () => sysService.findRole(paramsSysUser));
+
   const columns: ColumnsType<Role> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      width: 300,
+      title: '编码',
+      dataIndex: 'roleId',
     },
     {
-      title: 'Label',
-      dataIndex: 'label',
+      title: '名称',
+      dataIndex: 'roleName',
     },
-    { title: 'Order', dataIndex: 'order', width: 60 },
+    { title: '排序', dataIndex: 'roleSort' },
     {
-      title: 'Status',
+      title: '状态',
       dataIndex: 'status',
       align: 'center',
-      width: 120,
       render: (status) => (
-        <ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
-          {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
+        <ProTag color={status === '2' ? 'error' : 'success'}>
+          {status === '2' ? '正常' : '停用'}
         </ProTag>
       ),
     },
-    { title: 'Desc', dataIndex: 'desc' },
     {
-      title: 'Action',
+      title: '创建时间',
+      dataIndex: 'createdAt',
+      render: (status) => <label>{fHour(status)}</label>,
+    },
+    {
+      title: '操作',
       key: 'operation',
       align: 'center',
       width: 100,
@@ -97,24 +112,26 @@ export default function RolePage() {
   };
 
   return (
-    <Card
-      title="Role List"
-      extra={
-        <Button type="primary" onClick={onCreate}>
-          New
-        </Button>
-      }
-    >
-      <Table
-        rowKey="id"
-        size="small"
-        scroll={{ x: 'max-content' }}
-        pagination={false}
-        columns={columns}
-        dataSource={ROLES}
-      />
+    <>
+      {contextHolder}
+      <Card
+        extra={
+          <Button type="primary" onClick={onCreate}>
+            新增
+          </Button>
+        }
+      >
+        <Table
+          rowKey="id"
+          size="small"
+          scroll={{ x: 'max-content' }}
+          pagination={false}
+          columns={columns}
+          dataSource={findRole.data?.data || []}
+        />
 
-      <RoleModal {...roleModalPros} />
-    </Card>
+        <RoleModal {...roleModalPros} />
+      </Card>
+    </>
   );
 }

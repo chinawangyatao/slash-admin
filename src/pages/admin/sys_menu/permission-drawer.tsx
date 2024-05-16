@@ -1,15 +1,4 @@
-import {
-  AutoComplete,
-  Button,
-  Drawer,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Radio,
-  Space,
-  TreeSelect,
-} from 'antd';
+import { Button, Drawer, Form, Input, InputNumber, Radio, Space, TreeSelect } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 import { pagesSelect } from '@/router/hooks/use-permission-routes';
@@ -78,7 +67,7 @@ export default function PermissionDrawer({
   return (
     <Drawer
       destroyOnClose
-      width={550}
+      width={750}
       title={title}
       open={show}
       onClose={onCancel}
@@ -87,9 +76,14 @@ export default function PermissionDrawer({
           <Button
             type={'primary'}
             onClick={() => {
-              form.validateFields().then((formData) => {
-                onOk(title, { ...formData, menuId: formValue.menuId });
-              });
+              form
+                .validateFields()
+                .then((formData) => {
+                  onOk(title, { ...formData, menuId: formValue.menuId });
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
             }}
           >
             确定
@@ -107,7 +101,11 @@ export default function PermissionDrawer({
         wrapperCol={{ span: 18 }}
         layout="horizontal"
       >
-        <Form.Item label="类型" name="menuType" required>
+        <Form.Item
+          label="类型"
+          name="menuType"
+          rules={[{ required: true, message: '类型不能为空' }]}
+        >
           <Radio.Group optionType="button" buttonStyle="solid">
             <Radio value={PermissionType.CATALOGUE}>目录</Radio>
             <Radio value={PermissionType.MENU}>菜单</Radio>
@@ -115,20 +113,28 @@ export default function PermissionDrawer({
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="菜单名称" name="menuName" required>
+        <Form.Item
+          label="菜单名称"
+          name="menuName"
+          rules={[{ required: true, message: '菜单名称不能为空' }]}
+        >
           <Input />
         </Form.Item>
 
         <Form.Item
           label="国际化key"
           name="title"
-          required
+          rules={[{ required: true, message: '国际化key不能为空' }]}
           tooltip="菜单多语言key，对应多语言的说明信息 config"
         >
           <Input />
         </Form.Item>
 
-        <Form.Item label="上级菜单" name="parentId" required>
+        <Form.Item
+          label="上级菜单"
+          name="parentId"
+          rules={[{ required: true, message: '上级菜单不能为空' }]}
+        >
           <TreeSelect
             fieldNames={{
               label: 'menuName',
@@ -144,15 +150,23 @@ export default function PermissionDrawer({
         </Form.Item>
 
         <Form.Item
-          label="路径"
+          label="路由"
           name="path"
           tooltip="访问此页面自定义的url地址，建议/开头书写，例如/app-name"
-          required
+          rules={[{ required: true, message: '路由不能为空' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="文件路径"
+          name="component"
+          tooltip="pages下面的文件路径，要带index"
+          rules={[{ required: true, message: '文件路径不能为空' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item label="排序" name="sort" required>
+        <Form.Item label="排序" name="sort" rules={[{ required: true, message: '排序不能为空' }]}>
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
 

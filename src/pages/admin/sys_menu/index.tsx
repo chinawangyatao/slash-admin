@@ -28,6 +28,7 @@ const defaultPermissionValue: Permission = {
   permission: '',
   icon: '',
   hide: false,
+  title: '',
   status: BasicStatus.ENABLE,
   menuType: PermissionType.CATALOGUE,
   menuName: '',
@@ -54,24 +55,26 @@ export default function PermissionPage() {
   ];
   const [permissionModalProps, setPermissionModalProps] = useState<PermissionModalProps | any>({
     formValue: { ...defaultPermissionValue },
-    title: '新建',
+    title: '新增',
     show: false,
     onOk: (title, data) => {
-      if (title == '新建') {
-        createMenu.mutate(data, {
-          onSuccess: (resp) => {
-            if (resp.success) {
-              findMenu.refetch();
-              setPermissionModalProps((prev) => ({ ...prev, show: false }));
-              messageApi.success('创建菜单成功！');
-            } else {
-              messageApi.error(resp.errorMessage);
-            }
-            console.log(resp);
+      if (title == '新增') {
+        createMenu.mutate(
+          { ...data, component: '灿总牛逼' },
+          {
+            onSuccess: (resp) => {
+              if (resp.success) {
+                findMenu.refetch();
+                setPermissionModalProps((prev) => ({ ...prev, show: false }));
+                messageApi.success('创建菜单成功！');
+              } else {
+                messageApi.error(resp.errorMessage);
+              }
+              console.log(resp);
+            },
           },
-        });
+        );
       } else {
-        console.log(data);
         updateMenu.mutate(data, {
           onSuccess: (resp) => {
             if (resp.success) {
@@ -159,7 +162,7 @@ export default function PermissionPage() {
   const deleteMenu = useMutation(sysService.deleteMenu);
   const deleteHandle = (record: any) => {
     deleteMenu.mutate(
-      { id: record.menuId },
+      { ids: [record.menuId] },
       {
         onSuccess: (res) => {
           if (res.success) {
@@ -206,6 +209,7 @@ export default function PermissionPage() {
         }
       >
         <Table
+          expandable={{ defaultExpandAllRows: true }}
           rowKey={(record) => {
             return String(record.menuId); // 在这里加上一个时间戳就可以了
           }}
