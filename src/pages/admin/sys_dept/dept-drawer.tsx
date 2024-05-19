@@ -1,6 +1,7 @@
 import { Button, Drawer, Form, Input, InputNumber, Radio, Space, TreeSelect } from 'antd';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { pagesSelect } from '@/router/hooks/use-permission-routes';
 import { useUserPermission } from '@/store/userStore';
 
 import { Permission } from '#/entity';
@@ -16,7 +17,7 @@ export type PermissionModalProps = {
   [key: string]: any;
 };
 
-export default function PermissionDrawer({
+export default function DeptDrawer({
   title,
   show,
   formValue,

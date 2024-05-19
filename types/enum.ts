@@ -1,6 +1,6 @@
 export enum BasicStatus {
-  DISABLE,
-  ENABLE,
+  DISABLE = '1',
+  ENABLE = '2',
 }
 
 export enum ResultEnum {
@@ -56,4 +56,17 @@ export enum PermissionType {
   CATALOGUE = 'M',
   MENU = 'C',
   BUTTON = 'F',
+}
+
+export enum SySApiEnum {
+  SYS = 'blue',
+  BUS = 'purple',
+  '' = 'orange',
+}
+
+export enum MethodEnum {
+  GET = 'success',
+  PUT = 'processing',
+  POST = 'error',
+  DELETE = 'warning',
 }

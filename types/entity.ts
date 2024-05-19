@@ -75,14 +75,87 @@ export interface Permission {
   children?: Permission[];
 }
 
-export interface Role {
-  id: string;
+interface SysApi {
+  bus: string;
+  createBy: number;
+  createdAt: string;
+  func: string;
+  handle: string;
+  id: number;
+  isHistory: number;
+  method: string;
   name: string;
-  label: string;
-  status: BasicStatus;
-  order?: number;
-  desc?: string;
-  permission?: Permission[];
+  path: string;
+  project: string;
+  type: string;
+  updateBy: number;
+  updatedAt: string;
+}
+
+interface SysMenu {
+  apis: number[];
+  breadcrumb: string;
+  children: string[];
+  component: string;
+  createBy: number;
+  createdAt: string;
+  dataScope: string;
+  icon: string;
+  isFrame: string;
+  is_select: boolean;
+  menuId: number;
+  menuName: string;
+  menuType: string;
+  noCache: boolean;
+  params: string;
+  parentId: number;
+  path: string;
+  paths: string;
+  permission: string;
+  roleId: number;
+  sort: number;
+  sysApi: SysApi[];
+  title: string;
+  updateBy: number;
+  updatedAt: string;
+  visible: boolean;
+}
+
+interface SysDept {
+  children: string[];
+  createBy: number;
+  createdAt: string;
+  dataScope: string;
+  deptId: number;
+  deptName: string;
+  deptPath: string;
+  email: string;
+  leader: string;
+  params: string;
+  parentId: number;
+  phone: string;
+  sort: number;
+  status: number;
+  updateBy: number;
+  updatedAt: string;
+}
+
+export interface Role {
+  admin: boolean | null;
+  createBy: number | null;
+  dataScope: string | null;
+  deptIds: number[] | null;
+  flag: string | null;
+  menuIds: number[] | null;
+  remark: string | null;
+  roleId: number | null;
+  roleKey: string | null;
+  roleName: string | null;
+  roleSort: number | null;
+  status: string | null;
+  sysDept: SysDept[] | null;
+  sysMenu: SysMenu[] | null;
+  updateBy: number | null;
 }
 
 // 验证码

@@ -1,12 +1,12 @@
 import { Button, Drawer, Form, Input, InputNumber, Radio, Space, TreeSelect } from 'antd';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useUserPermission } from '@/store/userStore';
 
 import { Permission } from '#/entity';
 import { PermissionType } from '#/enum';
 
-export type PermissionModalProps = {
+export type PostDrawerProps = {
   formValue: Permission;
   title: string;
   show: boolean;
@@ -16,14 +16,14 @@ export type PermissionModalProps = {
   [key: string]: any;
 };
 
-export default function PermissionDrawer({
+export default function PostDrawer({
   title,
   show,
   formValue,
   treeData,
   onOk,
   onCancel,
-}: PermissionModalProps) {
+}: PostDrawerProps) {
   const [form] = Form.useForm();
   const permissions = useUserPermission();
   // const [setCompOptions] = useState(pagesSelect);
@@ -142,9 +142,7 @@ export default function PermissionDrawer({
             }}
             allowClear
             treeData={treeData}
-            onChange={(_value, labelList) => {
-              updateCompOptions(labelList[0] as string);
-            }}
+            onChange={(_value, labelList) => {}}
           />
         </Form.Item>
 

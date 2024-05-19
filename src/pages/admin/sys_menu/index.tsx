@@ -60,7 +60,7 @@ export default function PermissionPage() {
     onOk: (title, data) => {
       if (title == '新增') {
         createMenu.mutate(
-          { ...data, component: '灿总牛逼' },
+          { ...data },
           {
             onSuccess: (resp) => {
               if (resp.success) {
