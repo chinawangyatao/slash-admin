@@ -35,6 +35,8 @@ export enum SySUserApi {
   Dept = '/dept',
   Post = '/post',
   Api = '/sys-api',
+  DictType = '/dict/type',
+  DictData = '/dict/data',
 }
 
 const findTreeData = () => apiClient.get<ApiResponse<IDeptTree>>({ url: SySUserApi.DeptTree });
@@ -113,7 +115,52 @@ const deletePost = (data: deleteParams) =>
   apiClient.delete<ApiResponse>({ url: SySUserApi.Post, data });
 
 // 接口管理
-const findApi = () => apiClient.get<ApiResponse>({ url: SySUserApi.Api });
+const findApi = (data) =>
+  apiClient.get<ApiResponse>({
+    url: SySUserApi.Api + `?current=${data.current}&pageSize=${data.pageSize}`,
+  });
+const updataApi = (data) =>
+  apiClient.put<ApiResponse>({
+    url: SySUserApi.Api + `/${data.id}`,
+  });
+
+// 字典管理
+const findDict = (data: IGetSysUser) =>
+  apiClient.get<ApiResponse>({
+    url:
+      SySUserApi.DictType +
+      `?current=${data.current}&pageSize=${data.pageSize}${
+        data.dictName ? '&dictName=' + data.dictName : ''
+      }`,
+  });
+
+const findDictTypeById = (id: string) =>
+  apiClient.get<ApiResponse>({ url: SySUserApi.DictType + `/${id}` });
+
+const updateDictType = (data) =>
+  apiClient.put({ url: SySUserApi.DictType + `/${data.dictId}`, data });
+
+const createDictType = (data) => apiClient.post({ url: SySUserApi.DictType, data });
+
+const findDictDataById = (data: IGetSysUser) =>
+  apiClient.get<ApiResponse>({
+    url:
+      SySUserApi.DictData +
+      `?current=${data.current}&pageSize=${data.pageSize}&dictType=${data.dictType}`,
+  });
+
+const updateDictData = (data: any) =>
+  apiClient.put<ApiResponse>({
+    url: SySUserApi.DictData + `/${data.dictCode}`,
+    data,
+  });
+
+const createDictData = (data: any) =>
+  apiClient.post<ApiResponse>({
+    url: SySUserApi.DictData,
+    data,
+  });
+
 export default {
   findTreeData,
   updateSysUser,
@@ -143,4 +190,12 @@ export default {
   updatePost,
   deletePost,
   findApi,
+  updataApi,
+  findDict,
+  findDictTypeById,
+  findDictDataById,
+  updateDictData,
+  createDictData,
+  updateDictType,
+  createDictType,
 };

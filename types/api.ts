@@ -15,6 +15,7 @@ export interface ApiResponse<T = any> {
   status: string;
   success: boolean;
   traceId: string;
+  total: number;
   data?: T;
 }
 

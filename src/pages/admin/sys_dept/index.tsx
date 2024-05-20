@@ -39,8 +39,7 @@ export default function PermissionPage() {
     pageSize: 20,
   });
   const findDept = useQuery(['findDept'], () => sysService.findDept(findDeptParams));
-  const createMenu = useMutation(sysService.createMenu);
-  const updateMenu = useMutation(sysService.updateMenu);
+  const updateDept = useMutation(sysService.updateDept);
   const treeData = [
     {
       deptId: 0,
@@ -51,34 +50,34 @@ export default function PermissionPage() {
       children: findDept.data?.data || [],
     },
   ];
+  const creatDept = useMutation(sysService.creatDept);
   const [permissionModalProps, setPermissionModalProps] = useState<PermissionModalProps | any>({
     formValue: { ...defaultDeptValue },
     title: '新增',
     show: false,
-    onOk: (title, data) => {
+    onOk: (title: string, data: any) => {
       if (title == '新增') {
-        createMenu.mutate(
+        creatDept.mutate(
           { ...data },
           {
             onSuccess: (resp) => {
               if (resp.success) {
                 findDept.refetch();
                 setPermissionModalProps((prev) => ({ ...prev, show: false }));
-                messageApi.success('创建菜单成功！');
+                messageApi.success('创建部门成功！');
               } else {
                 messageApi.error(resp.errorMessage);
               }
-              console.log(resp);
             },
           },
         );
       } else {
-        updateMenu.mutate(data, {
+        updateDept.mutate(data, {
           onSuccess: (resp) => {
             if (resp.success) {
               findDept.refetch();
               setPermissionModalProps((prev) => ({ ...prev, show: false }));
-              messageApi.success('更新菜单成功！');
+              messageApi.success('更新部门成功！');
             } else {
               messageApi.error(resp.errorMessage);
             }
@@ -104,9 +103,9 @@ export default function PermissionPage() {
       dataIndex: 'status',
       render: (status) => (
         <ProTag
-          color={status === '根' ? 'purple' : status === BasicStatus.DISABLE ? 'error' : 'success'}
+          color={status === '根' ? 'purple' : status == BasicStatus.DISABLE ? 'error' : 'success'}
         >
-          {status === '根' ? status : status === BasicStatus.DISABLE ? '禁用' : '启用'}
+          {status === '根' ? status : status == BasicStatus.DISABLE ? '禁用' : '启用'}
         </ProTag>
       ),
     },
@@ -121,13 +120,8 @@ export default function PermissionPage() {
       align: 'center',
       width: 100,
       render: (_, record) =>
-        record.menuId !== 0 ? (
+        record.deptId !== 0 ? (
           <div className="flex w-full justify-end text-gray">
-            {record?.type === PermissionType.CATALOGUE && (
-              <IconButton onClick={() => onCreate(record.id)}>
-                <Iconify icon="gridicons:add-outline" size={18} />
-              </IconButton>
-            )}
             <IconButton onClick={() => onEdit(record)}>
               <Iconify icon="solar:pen-bold-duotone" size={18} />
             </IconButton>
@@ -146,10 +140,10 @@ export default function PermissionPage() {
         ) : null,
     },
   ];
-  const deleteMenu = useMutation(sysService.deleteMenu);
+  const deleteDept = useMutation(sysService.deleteDept);
   const deleteHandle = (record: any) => {
-    deleteMenu.mutate(
-      { ids: [record.menuId] },
+    deleteDept.mutate(
+      { ids: [record.deptId] },
       {
         onSuccess: (res) => {
           if (res.success) {
@@ -174,14 +168,24 @@ export default function PermissionPage() {
     }));
   };
 
+  const findDeptById = useMutation(sysService.findDeptById);
+
   const onEdit = (formValue: Permission) => {
-    setPermissionModalProps((prev) => ({
-      ...prev,
-      show: true,
-      title: '编辑',
-      formValue,
-      treeData: treeData,
-    }));
+    findDeptById.mutate(formValue.deptId, {
+      onSuccess: (resp) => {
+        if (resp.success) {
+          setPermissionModalProps((prev) => ({
+            ...prev,
+            show: true,
+            title: '编辑',
+            formValue: resp.data,
+            treeData: treeData,
+          }));
+        } else {
+          messageApi.error(resp.errorMessage);
+        }
+      },
+    });
   };
 
   return (
@@ -198,7 +202,7 @@ export default function PermissionPage() {
         <Table
           expandable={{ defaultExpandAllRows: true }}
           rowKey={(record) => {
-            return String(record.menuId); // 在这里加上一个时间戳就可以了
+            return String(record.deptId); // 在这里加上一个时间戳就可以了
           }}
           size="small"
           pagination={false}

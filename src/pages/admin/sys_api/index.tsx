@@ -6,12 +6,12 @@ import { IconButton, Iconify } from '@/components/icon';
 import ProTag from '@/theme/antd/components/tag';
 
 import { Permission } from '#/entity';
-import { BasicStatus, MethodEnum, PermissionType, SySApiEnum } from '#/enum';
+import { MethodEnum, PermissionType, SySApiEnum } from '#/enum';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import sysService from '@/api/services/sysService.ts';
 import { fHour } from '@/utils/format-day.ts';
 import { SysApiItem } from '#/api.ts';
-import PostDrawer, { PostDrawerProps } from '@/pages/admin/sys_post/post-drawer.tsx';
+import SysApiDrawer, { PostDrawerProps } from '@/pages/admin/sys_api/sys-api-drawer.tsx';
 
 const defaultSysApiValue: SysApiItem = {
   handle: null, // handle
@@ -29,11 +29,11 @@ export default function Index() {
 
   const [findPostParams, setFindPostParams] = useState({
     current: 1,
-    pageSize: 20,
+    pageSize: 10,
   });
   const findApi = useQuery(['findApi'], () => sysService.findApi(findPostParams));
   const createMenu = useMutation(sysService.createMenu);
-  const updateMenu = useMutation(sysService.updateMenu);
+  const updataApi = useMutation(sysService.updataApi);
 
   const [pageData, setPageData] = useState({
     tableData: findApi.data?.data || [],
@@ -48,38 +48,20 @@ export default function Index() {
 
   const [permissionModalProps, setPermissionModalProps] = useState<PostDrawerProps | any>({
     formValue: { ...defaultSysApiValue },
-    title: '新增',
+    title: '编辑',
     show: false,
-    onOk: (title, data) => {
-      if (title == '新增') {
-        createMenu.mutate(
-          { ...data },
-          {
-            onSuccess: (resp) => {
-              if (resp.success) {
-                findApi.refetch();
-                setPermissionModalProps((prev) => ({ ...prev, show: false }));
-                messageApi.success('创建菜单成功！');
-              } else {
-                messageApi.error(resp.errorMessage);
-              }
-              console.log(resp);
-            },
-          },
-        );
-      } else {
-        updateMenu.mutate(data, {
-          onSuccess: (resp) => {
-            if (resp.success) {
-              findApi.refetch();
-              setPermissionModalProps((prev) => ({ ...prev, show: false }));
-              messageApi.success('更新菜单成功！');
-            } else {
-              messageApi.error(resp.errorMessage);
-            }
-          },
-        });
-      }
+    onOk: (data) => {
+      updataApi.mutate(data, {
+        onSuccess: (resp) => {
+          if (resp.success) {
+            findApi.refetch();
+            setPermissionModalProps((prev) => ({ ...prev, show: false }));
+            messageApi.success('更新菜单成功！');
+          } else {
+            messageApi.error(resp.errorMessage);
+          }
+        },
+      });
     },
     onCancel: () => {
       setPermissionModalProps((prev) => ({ ...prev, show: false }));
@@ -135,59 +117,26 @@ export default function Index() {
       key: 'operation',
       align: 'center',
       width: 100,
-      render: (_, record) =>
-        record.menuId !== 0 ? (
-          <div className="flex w-full justify-end text-gray">
-            {record?.type === PermissionType.CATALOGUE && (
-              <IconButton onClick={() => onCreate(record.id)}>
-                <Iconify icon="gridicons:add-outline" size={18} />
-              </IconButton>
-            )}
-            <IconButton onClick={() => onEdit(record)}>
-              <Iconify icon="solar:pen-bold-duotone" size={18} />
-            </IconButton>
-            <Popconfirm
-              title="删除菜单？"
-              okText="确定"
-              cancelText="取消"
-              placement="left"
-              onConfirm={() => deleteHandle(record)}
-            >
-              <IconButton>
-                <Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
-              </IconButton>
-            </Popconfirm>
-          </div>
-        ) : null,
+      render: (_, record) => (
+        <div className="flex w-full justify-end text-gray">
+          <IconButton onClick={() => onEdit(record)}>
+            <Iconify icon="solar:pen-bold-duotone" size={18} />
+          </IconButton>
+          {/* <Popconfirm */}
+          {/*   title="删除菜单？" */}
+          {/*   okText="确定" */}
+          {/*   cancelText="取消" */}
+          {/*   placement="left" */}
+          {/*   onConfirm={() => deleteHandle(record)} */}
+          {/* > */}
+          {/*   <IconButton> */}
+          {/*     <Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" /> */}
+          {/*   </IconButton> */}
+          {/* </Popconfirm> */}
+        </div>
+      ),
     },
   ];
-  const deleteMenu = useMutation(sysService.deleteMenu);
-  const deleteHandle = (record: any) => {
-    deleteMenu.mutate(
-      { ids: [record.menuId] },
-      {
-        onSuccess: (res) => {
-          if (res.success) {
-            messageApi.success('删除成功！');
-            findApi.refetch();
-          } else {
-            messageApi.error(res.errorMessage);
-          }
-        },
-      },
-    );
-  };
-
-  const onCreate = (parentId?: string) => {
-    setPermissionModalProps((prev) => ({
-      ...prev,
-      show: true,
-      ...defaultSysApiValue,
-      title: '新增',
-      formValue: { ...defaultSysApiValue, parentId: parentId ?? 0 },
-      tableData: pageData.tableData,
-    }));
-  };
 
   const onEdit = (formValue: Permission) => {
     setPermissionModalProps((prev) => ({
@@ -199,28 +148,50 @@ export default function Index() {
     }));
   };
 
+  useEffect(() => {
+    // 每次findPostParams变化时都会触发这个effect
+    console.log(findPostParams);
+    findApi.refetch().then((res) => {
+      setPageData((prevState) => ({
+        ...prevState,
+        tableData: res.data?.data || [],
+      }));
+    });
+  }, [findPostParams]);
+
+  const tablePaginationChange = (currentPage: number, pageSize: number) => {
+    setFindPostParams((prevState) => ({
+      ...prevState,
+      current: currentPage,
+      pageSize: pageSize,
+    }));
+  };
+
   return (
     <>
       {contextHolder}
-      <Card
-        title="API管理"
-        extra={
-          <Button type="primary" onClick={() => onCreate()}>
-            新增
-          </Button>
-        }
-      >
+      <Card title="API管理">
         <Table
+          scroll={{ x: 'max-content' }}
           expandable={{ defaultExpandAllRows: true }}
           rowKey={(record) => {
-            return String(record); // 在这里加上一个时间戳就可以了
+            return String(record.id); // 在这里加上一个时间戳就可以了
           }}
           size="small"
-          pagination={false}
+          pagination={
+            findApi.data?.total > 0
+              ? {
+                  current: findPostParams.current,
+                  pageSize: findPostParams.pageSize,
+                  total: findApi?.data.total ?? 0,
+                  onChange: tablePaginationChange,
+                }
+              : false
+          }
           columns={columns}
           dataSource={pageData.tableData}
         />
-        <PostDrawer {...permissionModalProps} />
+        <SysApiDrawer {...permissionModalProps} />
       </Card>
     </>
   );

@@ -32,8 +32,8 @@ export default function Index() {
     pageSize: 20,
   });
   const findPost = useQuery(['findPost'], () => sysService.findPost(findPostParams));
-  const createMenu = useMutation(sysService.createMenu);
-  const updateMenu = useMutation(sysService.updateMenu);
+  const creatPost = useMutation(sysService.creatPost);
+  const updatePost = useMutation(sysService.updatePost);
 
   const [pageData, setPageData] = useState({
     tableData: findPost.data?.data || [],
@@ -52,7 +52,7 @@ export default function Index() {
     show: false,
     onOk: (title, data) => {
       if (title == '新增') {
-        createMenu.mutate(
+        creatPost.mutate(
           { ...data },
           {
             onSuccess: (resp) => {
@@ -63,12 +63,11 @@ export default function Index() {
               } else {
                 messageApi.error(resp.errorMessage);
               }
-              console.log(resp);
             },
           },
         );
       } else {
-        updateMenu.mutate(data, {
+        updatePost.mutate(data, {
           onSuccess: (resp) => {
             if (resp.success) {
               findPost.refetch();
@@ -103,8 +102,8 @@ export default function Index() {
       title: '状态',
       dataIndex: 'status',
       render: (status) => (
-        <ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
-          {status === BasicStatus.DISABLE ? '禁用' : '启用'}
+        <ProTag color={status == BasicStatus.DISABLE ? 'error' : 'success'}>
+          {status == BasicStatus.DISABLE ? '禁用' : '启用'}
         </ProTag>
       ),
     },
@@ -144,10 +143,10 @@ export default function Index() {
         ) : null,
     },
   ];
-  const deleteMenu = useMutation(sysService.deleteMenu);
+  const deletePost = useMutation(sysService.deletePost);
   const deleteHandle = (record: any) => {
-    deleteMenu.mutate(
-      { ids: [record.menuId] },
+    deletePost.mutate(
+      { ids: [record.postId] },
       {
         onSuccess: (res) => {
           if (res.success) {
@@ -196,7 +195,7 @@ export default function Index() {
         <Table
           expandable={{ defaultExpandAllRows: true }}
           rowKey={(record) => {
-            return String(record); // 在这里加上一个时间戳就可以了
+            return String(record.postId); // 在这里加上一个时间戳就可以了
           }}
           size="small"
           pagination={false}

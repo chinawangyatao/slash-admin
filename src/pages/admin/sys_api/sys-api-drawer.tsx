@@ -1,4 +1,4 @@
-import { Button, Drawer, Form, Input, InputNumber, Radio, Space, TreeSelect } from 'antd';
+import { Button, Drawer, Form, Input, InputNumber, Radio, Select, Space, TreeSelect } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useUserPermission } from '@/store/userStore';
@@ -16,7 +16,7 @@ export type PostDrawerProps = {
   [key: string]: any;
 };
 
-export default function PostDrawer({
+export default function SysApiDrawer({
   title,
   show,
   formValue,
@@ -78,7 +78,7 @@ export default function PostDrawer({
               form
                 .validateFields()
                 .then((formData) => {
-                  onOk(title, { ...formData, postId: formValue.postId });
+                  onOk({ ...formData, id: formValue.id });
                 })
                 .catch((e) => {
                   console.log(e);
@@ -100,35 +100,47 @@ export default function PostDrawer({
         wrapperCol={{ span: 18 }}
         layout="horizontal"
       >
-        <Form.Item
-          label="名称"
-          name="postName"
-          rules={[{ required: true, message: '名称不能为空' }]}
-        >
+        <Form.Item label="名称" name="name" rules={[{ required: true, message: '名称不能为空' }]}>
           <Input />
         </Form.Item>
-
         <Form.Item
-          label="代码"
-          name="postCode"
-          rules={[{ required: true, message: '代码不能为空' }]}
+          label="接口类型"
+          name="type"
+          rules={[{ required: true, message: '接口类型不能为空' }]}
         >
-          <Input />
+          <Select
+            options={[
+              { label: 'BUS', value: 'BUS' },
+              { label: 'SYS', value: 'SYS' },
+            ]}
+          />
         </Form.Item>
-
-        <Form.Item label="状态" name="status" rules={[{ required: true, message: '状态不能为空' }]}>
-          <Radio.Group optionType="default" buttonStyle="solid">
-            <Radio value={Number(BasicStatus.ENABLE)}>启用</Radio>
-            <Radio value={Number(BasicStatus.DISABLE)}>禁用</Radio>
-          </Radio.Group>
+        <Form.Item label="名称" name="handle">
+          <Input.TextArea disabled />
         </Form.Item>
-
-        <Form.Item label="排序" name="sort" rules={[{ required: true, message: '排序不能为空' }]}>
-          <InputNumber style={{ width: '100%' }} />
+        <Form.Item label="接口地址" name="path">
+          <Input disabled />
         </Form.Item>
-
-        <Form.Item label="备注" name="remark">
-          <Input.TextArea />
+        <Form.Item label="请求方式" name="method">
+          <Input disabled />
+        </Form.Item>
+        <Form.Item label="历史" name="isHistory">
+          <Select
+            disabled
+            options={[
+              { label: '正常', value: 0 },
+              { label: '历史', value: 1 },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item label="项目" name="postCode">
+          <Input disabled />
+        </Form.Item>
+        <Form.Item label="业务" name="bus">
+          <Input disabled />
+        </Form.Item>
+        <Form.Item label="func" name="func">
+          <Input disabled />
         </Form.Item>
       </Form>
     </Drawer>
