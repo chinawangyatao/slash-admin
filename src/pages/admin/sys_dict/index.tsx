@@ -86,18 +86,25 @@ const Index = () => {
   });
 
   const findDict = useQuery(['findDict'], () => SysService.findDict(pageParams.tablePage));
+  let dictId = useRef(findDict.data?.data[0]?.dictId ?? '');
 
-  let dictId = useRef('');
   const [selectedItem, setSelectedItem] = useState<any>({});
-  const findDictTypeById = useQuery(['findDictTypeById'], () =>
-    SysService.findDictTypeById(dictId.current),
+  const findDictTypeById = useQuery(
+    ['findDictTypeById'],
+    () => SysService.findDictTypeById(dictId.current),
+    { enabled: false },
   );
+
+  // useEffect(() => {
+  //   dictId.current = findDict.data?.data[0]?.dictId ?? '';
+  //   findDictTypeById.refetch();
+  // }, [findDict.data]);
 
   const findDictDataById = useQuery(['findDictDataById'], () =>
     SysService.findDictDataById(pageParams.tableDictData),
   );
   const selectedNameHandle = (item) => {
-    if (selectedItem.dictId) {
+    if (selectedItem.dictId == item.dictId) {
       setSelectedItem({});
     } else {
       setSelectedItem(item);
@@ -334,23 +341,26 @@ const Index = () => {
           </Card>
         </Col>
         <Col span={15} style={{ paddingLeft: '10px' }}>
-          <Card
-            title={'字典数据'}
-            extra={
-              <>
-                <Button type={'primary'} onClick={onCreate}>
-                  新增
-                </Button>
-              </>
-            }
-          >
-            <Table
-              pagination={false}
-              rowKey={(record) => String(record.dictCode)}
-              columns={columns}
-              dataSource={findDictDataById.data?.data || []}
-            />
-          </Card>
+          <Spin spinning={findDictDataById.isLoading}>
+            <Card
+              title={'字典数据'}
+              extra={
+                <>
+                  <Button type={'primary'} onClick={onCreate}>
+                    新增
+                  </Button>
+                </>
+              }
+            >
+              <Table
+                pagination={false}
+                rowKey={(record) => String(record.dictCode)}
+                columns={columns}
+                dataSource={findDictDataById.data?.data || []}
+              />
+            </Card>
+          </Spin>
+
           <Dict_drawer {...pageData} />
         </Col>
       </Row>

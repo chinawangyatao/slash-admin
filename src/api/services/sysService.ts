@@ -1,6 +1,6 @@
 import apiClient from '../apiClient';
 
-import { UserInfo, UserToken } from '#/entity';
+import { IPageSize, UserInfo, UserToken } from '#/entity';
 import {
   ApiResponse,
   deleteParams,
@@ -11,6 +11,7 @@ import {
   MenuListItem,
   PostListItem,
 } from '#/api.ts';
+import { da } from '@faker-js/faker';
 
 export interface SignInReq {
   username: string;

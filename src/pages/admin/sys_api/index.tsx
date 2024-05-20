@@ -67,7 +67,7 @@ export default function Index() {
       setPermissionModalProps((prev) => ({ ...prev, show: false }));
     },
   });
-  const columns = [
+  const columns: any = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -94,7 +94,7 @@ export default function Index() {
       title: '历史',
       dataIndex: 'isHistory',
       render: (isHistory) => (
-        <ProTag color={!!isHistory ? 'green' : 'red'}>{!!isHistory ? '是' : '否'}</ProTag>
+        <ProTag color={!!isHistory ? 'geekblue' : 'lime'}>{!!isHistory ? '历史' : '正常'}</ProTag>
       ),
     },
     {
@@ -120,9 +120,9 @@ export default function Index() {
       render: (_, record) => (
         <div className="flex w-full justify-end text-gray">
           <IconButton onClick={() => onEdit(record)}>
-            <Iconify icon="solar:pen-bold-duotone" size={18} />
-          </IconButton>
-          {/* <Popconfirm */}
+              <Iconify icon="solar:pen-bold-duotone" size={18} />
+            </IconButton>
+           {/* <Popconfirm */}
           {/*   title="删除菜单？" */}
           {/*   okText="确定" */}
           {/*   cancelText="取消" */}
@@ -146,6 +146,14 @@ export default function Index() {
       formValue,
       tableData: pageData.tableData,
     }));
+  };
+  const paginationChange = (page: number, pageSize: number) => {
+    setFindPostParams((prevState) => ({
+      ...prevState,
+      current: page,
+      pageSize: pageSize,
+    }));
+    findApi.refetch();
   };
 
   useEffect(() => {
@@ -190,6 +198,12 @@ export default function Index() {
           }
           columns={columns}
           dataSource={pageData.tableData}
+          pagination={{
+            total: findApi.data?.total || 0,
+            current: findPostParams.current,
+            pageSize: findPostParams.pageSize,
+            onChange: paginationChange,
+          }}
         />
         <SysApiDrawer {...permissionModalProps} />
       </Card>

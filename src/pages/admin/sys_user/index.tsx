@@ -32,7 +32,7 @@ import { fHour } from '@/utils/format-day.ts';
 import UserDetail from '@/pages/admin/sys_user/detail.tsx';
 
 export default function RolePage() {
-  const { colorTextSecondary } = useThemeToken();
+  // const { colorTextSecondary } = useThemeToken();
 
   const [treeData, setTreeData] = useState();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -257,6 +257,7 @@ export default function RolePage() {
         <Col span={5} className={'pr-5'}>
           <Search style={{ marginBottom: 8 }} placeholder="搜素部门" onSearch={searchOnChange} />
           <Tree
+            defaultExpandParent
             fieldNames={{ title: 'label', key: 'value' }}
             onSelect={treeSelectHandle}
             treeData={treeData || []}
