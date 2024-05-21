@@ -19,7 +19,7 @@ import {
 import React, { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 
-const Index = ({ FormColumns, formOptions }) => {
+const Index = ({ formColumns, formOptions }) => {
   const [form] = Form.useForm();
   const [expand, setExpand] = useState(false);
   return (
@@ -27,7 +27,7 @@ const Index = ({ FormColumns, formOptions }) => {
       <Card>
         <Form labelCol={formOptions.labelCol}>
           <Row>
-            {FormColumns.map((item, index) => (
+            {formColumns.map((item, index) => (
               <Col key={item.key}>
                 <Form.Item label={item.label} rules={item.rules}>
                   <FormItemsElement type={item.type} options={item.options} />
@@ -35,7 +35,7 @@ const Index = ({ FormColumns, formOptions }) => {
               </Col>
             ))}
           </Row>
-          <div>
+          <div className={'float-end'}>
             <Space>
               <Button type={'primary'} htmlType={'submit'}>
                 提交
