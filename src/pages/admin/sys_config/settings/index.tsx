@@ -61,11 +61,7 @@ const Index = () => {
       <Card>
         <Row className="w-full">
           <Col>
-            <Tabs onChange={tabsChangeHandle} tabPosition="left">
-              {tabsItem.map((item) => (
-                <Tabs.TabPane tab={item.label} key={item.key} />
-              ))}
-            </Tabs>
+            <Tabs onChange={tabsChangeHandle} tabPosition="left" items={tabsItem} />
           </Col>
           <Col span={20}>
             <Typography.Title level={4} className={'relative'}>

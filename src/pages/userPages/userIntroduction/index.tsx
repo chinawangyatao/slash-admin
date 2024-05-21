@@ -1,5 +1,11 @@
+import AntTablePro from '@/components/AntTablePro';
+
 const Index = () => {
-  return <>userIntroduction</>;
+  return (
+    <>
+      <AntTablePro />
+    </>
+  );
 };
 
 export default Index;

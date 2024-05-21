@@ -291,6 +291,17 @@ const Index = () => {
       },
     }));
   };
+
+  const tablePageChangeHandle = (current, pageSize) => {
+    setPageParams((prevState) => ({
+      ...prevState,
+      tableDictData: {
+        ...prevState.tableDictData,
+        current,
+        pageSize,
+      },
+    }));
+  };
   return (
     <div>
       {contextHolder}
@@ -353,7 +364,12 @@ const Index = () => {
               }
             >
               <Table
-                pagination={false}
+                pagination={{
+                  total: findDictDataById.data?.total,
+                  current: pageParams.tableDictData?.current,
+                  pageSize: pageParams.tableDictData.pageSize,
+                  onChange: tablePageChangeHandle,
+                }}
                 rowKey={(record) => String(record.dictCode)}
                 columns={columns}
                 dataSource={findDictDataById.data?.data || []}

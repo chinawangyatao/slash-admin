@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 
 const Index = () => {
   return (
@@ -44,6 +44,13 @@ const Index = () => {
           <Col span={12}>
             <Form.Item label={'应用说明'}>
               <Input.TextArea />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item>
+              <Button type={'primary'} htmlType={'submit'}>
+                提交
+              </Button>
             </Form.Item>
           </Col>
         </Row>
